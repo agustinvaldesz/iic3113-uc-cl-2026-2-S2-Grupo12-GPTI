@@ -1,0 +1,30 @@
+# Entorno virtual
+venv/
+env/
+ENV/
+.venv/
+
+# Caché y archivos compilados de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Base de datos local SQLite (para no sobreescribir datos entre compañeros)
+*.db
+*.sqlite3
+nutricart.db
+
+# Configuraciones de editores e IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Variables de entorno secretas (futuras API keys de LLM, etc.)
+.env
