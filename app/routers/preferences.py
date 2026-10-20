@@ -1,7 +1,14 @@
-from fastapi import APIRouter, HTTPException
-from app.models import UserPreferences
+from fastapi import APIRouter, Depends, HTTPException
+from app.models import UserPreferences, UserResponse
+from app.models_db import UserDB
+from app.dependencies import get_current_user
 
 router = APIRouter(prefix="/api/user", tags=["Preferencias de Usuario"])
+
+@router.get("/me", response_model=UserResponse)
+def read_current_user(current_user: UserDB = Depends(get_current_user)):
+    """Devuelve los datos del usuario dueño del token."""
+    return current_user
 
 @router.post("/preferences")
 def save_user_preferences(data: UserPreferences):
