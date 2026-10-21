@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean
+from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, ForeignKey, JSON
 from datetime import datetime
 from app.database import Base
 
@@ -33,3 +33,12 @@ class ProductCacheDB(Base):
     name = Column(String, index=True)
     price = Column(Float)
     last_updated = Column(DateTime, default=datetime.utcnow)
+
+class UserDietaryProfileDB(Base):
+    __tablename__ = "user_dietary_profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False)
+    diet_type = Column(String, nullable=False, default="con_carne")  # "con_carne" o "vegetariana"
+    allergies = Column(JSON, nullable=False, default=list)           # "mani"
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
