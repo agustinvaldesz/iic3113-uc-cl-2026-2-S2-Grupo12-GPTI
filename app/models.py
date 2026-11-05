@@ -1,5 +1,5 @@
-from pydantic import BaseModel, EmailStr
-from typing import List, Optional
+from pydantic import BaseModel, EmailStr, Field, field_validator
+from typing import List, Optional, Literal
 from datetime import datetime
 
 # Lo que envía el frontend al registrarse
@@ -28,6 +28,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     dietary_preference: Optional[str]
     budget_limit: Optional[float]
+    role: str
     is_active: bool
     created_at: datetime
 
@@ -35,8 +36,43 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 class UserPreferences(BaseModel):
-    user_id: str
-    intent: str  # Ej: "ahorro", "saludable", "balance"
-    shopping_list: Optional[List[str]] = [] # Lista de abarrotes opcional
+    intent: Literal["ahorro", "saludable", "balance"]
+    budget_limit: Optional[float] = Field(default=None, gt=0)  # Presupuesto semanal, debe ser positivo
+    shopping_list: Optional[List[str]] = []
+
+# Tipos de dieta y alergias
+DietType = Literal["con_carne", "vegetariana", "vegana"]
+Allergy = Literal["gluten", "lactosa", "frutos_secos", "mariscos"]
+
+class DietaryProfileUpdate(BaseModel):
+    diet_type: DietType = "con_carne"
+    allergies: List[Allergy] = []
+    consent: bool  # Obligatorio, de lo contrario FastAPI responde 422
+
+    @field_validator("consent")
+    @classmethod
+    def consent_must_be_true(cls, value: bool) -> bool:
+        if value is not True:
+            raise ValueError("Se requiere consentimiento para guardar restricciones alimentarias.")
+        return value
+
+class DietaryProfileResponse(BaseModel):
+    diet_type: DietType
+    allergies: List[Allergy]
+    consent_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+DIET_LABELS = {
+    "con_carne": "Con carne",
+    "vegetariana": "Vegetariana",
+    "vegana": "Vegana",
+}
+
+ALLERGY_LABELS = {
+    "gluten": "Gluten",
+    "lactosa": "Lactosa",
+    "frutos_secos": "Frutos secos",
+    "mariscos": "Mariscos",
+}
 
 TokenResponse.model_rebuild()
