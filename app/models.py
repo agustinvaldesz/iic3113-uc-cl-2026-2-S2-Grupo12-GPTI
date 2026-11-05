@@ -28,6 +28,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     dietary_preference: Optional[str]
     budget_limit: Optional[float]
+    role: str
     is_active: bool
     created_at: datetime
 
