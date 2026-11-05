@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from datetime import datetime
 from sqlalchemy.orm import Session
 
@@ -44,6 +44,14 @@ def save_user_preferences(
 def _get_profile(db: Session, user_id: int):
     return db.query(UserDietaryProfileDB).filter(UserDietaryProfileDB.user_id == user_id).first()
 
+def _to_response(profile: UserDietaryProfileDB) -> DietaryProfileResponse:
+    return DietaryProfileResponse(
+        diet_type=profile.diet_type,
+        allergies=profile.allergies,
+        consent_at=profile.consent_at,
+        updated_at=profile.updated_at,
+    )
+
 @router.get("/dietary-profile", response_model=DietaryProfileResponse)
 def read_dietary_profile(
     current_user: UserDB = Depends(get_current_user),
@@ -53,9 +61,7 @@ def read_dietary_profile(
     profile = _get_profile(db, current_user.id)
     if profile is None:
         return DietaryProfileResponse(diet_type="con_carne", allergies=[])
-    return DietaryProfileResponse(
-        diet_type=profile.diet_type, allergies=profile.allergies, updated_at=profile.updated_at
-    )
+    return _to_response(profile)
 
 @router.get("/dietary-options")
 def read_dietary_options():
@@ -77,15 +83,15 @@ def update_dietary_profile(
         profile = UserDietaryProfileDB(user_id=current_user.id)
         db.add(profile)
 
+    now = datetime.utcnow()
     profile.diet_type = data.diet_type
     profile.allergies = list(dict.fromkeys(data.allergies))  # Elimina alergias repetidas
-    profile.updated_at = datetime.utcnow()
+    profile.consent_at = now  # Registra el consentimiento
+    profile.updated_at = now
 
     db.commit()
     db.refresh(profile)
-    return DietaryProfileResponse(
-        diet_type=profile.diet_type, allergies=profile.allergies, updated_at=profile.updated_at
-    )
+    return _to_response(profile)
 
 @router.delete("/dietary-profile", status_code=204)
 def delete_dietary_profile(

@@ -39,6 +39,7 @@ class UserDietaryProfileDB(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False)
-    diet_type = Column(String, nullable=False, default="con_carne")  # "con_carne" o "vegetariana"
-    allergies = Column(JSON, nullable=False, default=list)           # "mani"
+    diet_type = Column(String, nullable=False, default="con_carne")  # "con_carne", "vegetariana" o "vegana"
+    allergies = Column(JSON, nullable=False, default=list)           # Lista de alergias
+    consent_at = Column(DateTime, nullable=True) # Fecha en que el usuario dio su consentimiento
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
