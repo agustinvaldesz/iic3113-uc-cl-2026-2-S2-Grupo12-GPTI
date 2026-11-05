@@ -54,6 +54,10 @@ pip install -r requirements.txt
 ```bash
 DATABASE_URL=postgresql://postgres.muqarojryuazjdhsavzb:TU_CONTRASEÑA@aws-0-us-east-2.pooler.supabase.com:5432/postgres
 ```
+3. (Opcional) Configura los orígenes permitidos por CORS para el frontend, como lista separada por comas. Si no se define, el valor por defecto es `http://localhost:5173` (Vite):
+```bash
+ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+```
 
 ### 6. Ejecutar el Servidor de Desarrollo
 Inicia la aplicación FastAPI con recarga automática:
