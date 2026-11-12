@@ -1,0 +1,266 @@
+[
+  {
+    "id": 1,
+    "title": "Lasaña boloñesa",
+    "category": "alto en proteína",
+    "prep_time": "30 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "gluten",
+      "lactosa"
+    ],
+    "ingredients": [
+      "450 g de carne molida magra (96/4)",
+      "1 cebolla blanca pequeña picada",
+      "1 cucharada de ajo picado",
+      "1 cucharadita de sal",
+      "1 cucharadita de pimienta negra",
+      "1 cucharada de condimento italiano",
+      "1/2 cucharadita de albahaca seca",
+      "4 tazas de salsa de tomate con albahaca",
+      "1/2 taza de caldo de carne bajo en sodio",
+      "225 g de pasta tipo rigatoni",
+      "115 g de queso mozzarella semidescremado rallado",
+      "115 g de queso ricotta semidescremado",
+      "Albahaca fresca picada",
+      "Queso parmesano rallado"
+    ],
+    "instructions": "Cocinar la pasta según instrucciones. Dorar la carne en un sartén, sazonar con cebolla, ajo, condimento italiano, albahaca seca, sal y pimienta. Añadir salsa de tomate y caldo de carne, hervir a fuego lento. Integrar la pasta cocida, agregar la mozzarella hasta derretir y coronar con queso ricotta, albahaca y parmesano."
+  },
+  {
+    "id": 2,
+    "title": "Macarrones con carne alto en proteína",
+    "category": "alto en proteína",
+    "prep_time": "20 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "gluten",
+      "lactosa"
+    ],
+    "ingredients": [
+      "450 g de carne molida magra (96/4)",
+      "1 paquete de sazonador para tacos",
+      "225 g de pasta tipo coditos (macarrones)",
+      "1 pimiento rojo picado",
+      "225 g de queso cottage bajo en grasa",
+      "1/2 taza de salsa de tomate tipo mexicana",
+      "1/2 taza de leche entera o semidescremada",
+      "56 g de queso cheddar suave rallado",
+      "56 g de queso cheddar fuerte reducido en grasa",
+      "1 cucharada de harina de trigo",
+      "1/4 taza de agua"
+    ],
+    "instructions": "Cocinar los coditos. Dorar la carne molida y añadir el sazonador para tacos disuelto en agua junto con el pimiento picado. Licuar el queso cottage con la leche, salsa mexicana y harina, y verter sobre la carne junto al queso cheddar hasta derretir. Incorporar la pasta escurrida a la mezcla de queso y carne."
+  },
+  {
+    "id": 3,
+    "title": "Arroz Frito con Carne estilo Oriental",
+    "category": "balance",
+    "prep_time": "30 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "gluten",
+      "mariscos"
+    ],
+    "ingredients": [
+      "680 g de carne de vacuno magra en tiras finas",
+      "2 cucharaditas de maicena",
+      "6 cucharadas de salsa de soya baja en sodio",
+      "2 cucharadas de aceite vegetal o palta",
+      "Pimienta blanca",
+      "3 tazas de arroz jazmín cocido y frío del día anterior",
+      "4 dientes de ajo picados",
+      "2 huevos grandes",
+      "1 taza de mix de arvejas y zanahorias",
+      "4 tallos de cebollín rebanados",
+      "1 cucharada de salsa de ostras",
+      "1 cucharadita de salsa de pescado",
+      "1 cucharadita de aceite de sésamo tostado"
+    ],
+    "instructions": "Marinar la carne con maicena, 3 cdas de salsa de soya y pimienta, luego sellar a fuego alto y reservar. Sofreír el ajo y el arroz frío en el sartén hasta dorar levemente, hacer un hueco al centro para cocinar y revolver los huevos. Añadir los vegetales congelados, salsa (soya restante, salsa de ostras, salsa de pescado y aceite de sésamo), reintegrar la carne y cebollín, saltear todo junto."
+  },
+  {
+    "id": 4,
+    "title": "Pollo teriyaki con arroz",
+    "category": "saludable",
+    "prep_time": "25 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "gluten"
+    ],
+    "ingredients": [
+      "450 g de pechuga de pollo cortada en cubos",
+      "1/2 taza de aminos de coco o salsa de soya",
+      "1 cucharadita de aceite de sésamo tostado",
+      "2 cucharadas de sirope bajo en calorías o maple",
+      "1 cucharadita de ajo en polvo",
+      "1/2 cucharadita de jengibre molido",
+      "1 cucharadita de harina de tapioca o maicena",
+      "1 cucharadita de agua",
+      "1 lata de 225 g de piña en trozos escurrida",
+      "280 g de arroz de coliflor congelado",
+      "1 paquete de arroz basmati listo para calentar",
+      "2 cebollines picados",
+      "Semillas de sésamo y hojuelas de ají"
+    ],
+    "instructions": "Cocinar el pollo sazonado en sartén o freidora de aire hasta dorar y reservar. Hervir la mezcla de aminos de coco, sirope, condimentos y la maicena disuelta en agua hasta que espese la salsa, luego integrar el pollo. Calentar y mezclar el arroz basmati con el arroz de coliflor y cebollín; servir con el pollo teriyaki y trozos de piña."
+  },
+  {
+    "id": 5,
+    "title": "Ensalada de Pollo Cremosa y Picante",
+    "category": "saludable",
+    "prep_time": "35 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "gluten",
+      "lactosa",
+      "frutos_secos"
+    ],
+    "ingredients": [
+      "680 g de pechuga de pollo en rodajas finas",
+      "2 cucharadas de salsa de soya",
+      "4 cucharaditas de vinagre de arroz",
+      "4 cucharaditas de miel",
+      "1.5 cucharaditas de aceite de sésamo",
+      "Ajo fresco picado y ajo en polvo",
+      "1/2 taza de yogur griego natural",
+      "2 cucharadas de mayonesa",
+      "3 cucharadas de salsa sweet chili",
+      "1 a 2 cucharadas de Sriracha",
+      "400 g de mix de repollo (coleslaw)",
+      "280 g de repollitos de Bruselas rallados",
+      "3/4 taza de edamame cocido",
+      "1/2 taza de cilantro picado y cebollín",
+      "2 cucharadas de almendras laminadas tostadas"
+    ],
+    "instructions": "Marinar el pollo con soya, vinagre de arroz, aceite de sésamo, miel y condimentos por 20 minutos y cocinar en sartén hasta dorar. Batir el yogur griego, mayonesa, salsa sweet chili, sriracha, miel restante y vinagre de arroz. Mezclar el repollo, repollitos de Bruselas, edamame, cilantro y cebollín con la mitad del aderezo, coronar con el pollo picado, el resto de salsa y almendras tostadas."
+  },
+  {
+    "id": 6,
+    "title": "Salteado de Tofu y Vegetales en Salsa de Sésamo",
+    "category": "vegano",
+    "prep_time": "25 mins",
+    "diet_type": "vegana",
+    "allergens": [
+      "gluten"
+    ],
+    "ingredients": [
+      "450 g de tofu firme prensado en cubos",
+      "1 cucharada de maicena",
+      "1 cucharada de aceite vegetal",
+      "200 g de brócoli en arbolitos",
+      "1 pimiento rojo en tiras",
+      "1 taza de champiñones laminados",
+      "2 tallos de cebollín rebanados",
+      "2 tazas de arroz integral o jazmín cocido",
+      "4 cucharadas de salsa de soya o tamari",
+      "1 cucharada de sirope de agave o maple",
+      "1 cucharadita de aceite de sésamo tostado",
+      "2 dientes de ajo picados",
+      "1 cucharadita de jengibre rallado",
+      "1/3 taza de caldo de verduras",
+      "1 cucharadita de maicena con 1 cda de agua"
+    ],
+    "instructions": "Rebozar el tofu seco en maicena y dorar en sartén con aceite hasta que quede crujiente, luego reservar. Saltear el brócoli, pimiento y champiñones durante 5 minutos. Verter la salsa preparada con soya, caldo vegetal, sirope, condimentos y maicena disuelta; dejar espesar, incorporar el tofu dorado y servir acompañado de arroz caliente."
+  },
+  {
+    "id": 7,
+    "title": "Cazuela de Pasta con Pollo al Pesto Rápido",
+    "category": "sin gluten y sin frutos secos",
+    "prep_time": "30 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "lactosa"
+    ],
+    "ingredients": [
+      "500 g de pechuga de pollo en cubos",
+      "250 g de pasta corta sin gluten certificada",
+      "1 taza de tomates cherry partidos",
+      "2 tazas de espinaca fresca",
+      "1/2 taza de queso parmesano rallado",
+      "1 cucharada de aceite de oliva",
+      "2 tazas de hojas de albahaca fresca",
+      "1/4 taza de semillas de girasol tostadas sin sal",
+      "2 dientes de ajo",
+      "2 cucharadas de jugo de limón",
+      "3 cucharadas de aceite de oliva extra virgen",
+      "Sal y pimienta"
+    ],
+    "instructions": "Cocinar la pasta sin gluten al dente y reservar un poco del agua de cocción. Procesar la albahaca con semillas de girasol, ajo, jugo de limón, parmesano y aceite de oliva para el pesto libre de frutos secos. Dorar el pollo en sartén, agregar tomates cherry y espinacas, e integrar la pasta con el pesto y unas cucharadas del agua de cocción."
+  },
+  {
+    "id": 8,
+    "title": "Arroz Salteado con Pavo al Estilo Oriental",
+    "category": "libre de pescado y mariscos",
+    "prep_time": "25 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "gluten"
+    ],
+    "ingredients": [
+      "450 g de pechuga de pavo molida magra",
+      "3 tazas de arroz cocido frío",
+      "2 huevos grandes batidos",
+      "1 taza de arvejas y choclo",
+      "3 tallos de cebollín picados",
+      "2 dientes de ajo picados",
+      "1 cucharada de aceite vegetal",
+      "3 cucharadas de salsa de soya baja en sodio",
+      "1 cucharada de salsa de soya oscura",
+      "1 cucharada de caldo concentrado de champiñones",
+      "1 cucharadita de aceite de sésamo tostado",
+      "1 cucharadita de azúcar o miel",
+      "1/4 cucharadita de pimienta blanca"
+    ],
+    "instructions": "Dorar la carne de pavo molida a fuego alto y reservar. Cuajar los huevos revueltos brevemente y retirar. Saltear el ajo y el arroz frío en sartén, añadir arvejas y choclo, reincorporar el pavo y el huevo, y bañar con la salsa preparada con soya, caldo de champiñones (sustituto seguro de salsas marinas) y aceite de sésamo; mezclar y finalizar con cebollín."
+  },
+  {
+    "id": 9,
+    "title": "Pollo Tikka Cremoso con Arroz Basmati",
+    "category": "sin lácteos",
+    "prep_time": "35 mins",
+    "diet_type": "con_carne",
+    "allergens": [],
+    "ingredients": [
+      "500 g de pechuga de pollo en cubos",
+      "1/2 taza de yogur vegetal natural sin azúcar (coco o soya)",
+      "1 cucharada de jugo de limón",
+      "1 cucharadita de comino molido",
+      "1 cucharadita de paprika",
+      "1/2 cucharadita de cúrcuma",
+      "1 taza de puré de tomate",
+      "1/2 taza de crema o leche de coco en lata",
+      "1 cebolla picada",
+      "2 dientes de ajo rallados",
+      "1 cucharadita de garam masala",
+      "1 cucharada de aceite de oliva",
+      "2 tazas de arroz basmati cocido",
+      "Cilantro fresco"
+    ],
+    "instructions": "Marinar el pollo con el yogur vegetal, limón y especias por 15 minutos, luego sellar en sartén y reservar. Sofreír la cebolla y el ajo con el garam masala, incorporar el puré de tomate y la crema de coco para formar una salsa suave. Añadir el pollo a la salsa, cocinar a fuego lento por 10 minutos y servir sobre arroz basmati con cilantro."
+  },
+  {
+    "id": 10,
+    "title": "Salteado de Ternera con Verduras y Arroz",
+    "category": "digestión sensible (bajo en FODMAP)",
+    "prep_time": "25 mins",
+    "diet_type": "con_carne",
+    "allergens": [],
+    "ingredients": [
+      "450 g de carne de vacuno magra en tiras finas",
+      "1 cucharada de aceite de oliva infusionado con ajo",
+      "1 taza de zanahorias en juliana",
+      "1 taza de pimiento rojo en tiras",
+      "1 taza de zapallito italiano en medias lunas",
+      "Parte verde de 3 tallos de cebollín picada",
+      "2 tazas de arroz jazmín cocido",
+      "3 cucharadas de salsa tamari (sin gluten)",
+      "1 cucharadita de jengibre rallado",
+      "1 cucharada de jarabe de maple",
+      "1 cucharadita de aceite de sésamo",
+      "1/4 taza de agua",
+      "1 cucharadita de maicena"
+    ],
+    "instructions": "Sellar las tiras de vacuno a fuego alto en aceite infusionado con ajo y retirar. Saltear las zanahorias, pimiento rojo y zapallito italiano hasta que queden al dente. Verter la salsa hecha con tamari, maple, jengibre, aceite de sésamo y maicena disuelta; cuando espese, reincorporar la carne y la parte verde del cebollín por 1 minuto antes de servir con arroz."
+  }
+]
