@@ -1,7 +1,10 @@
+import asyncio
+import httpx
 from fastapi import APIRouter, HTTPException, status
 from app.schemas.recommendations import RecommendationRequest, RecommendationResponse
 from app.services.llm_service import recommend_and_normalize_recipes
 from app.services.supabase_service import supabase
+from app.services.lider_service import search_lider_via_google_shopping
 
 router = APIRouter(
     prefix="/api/recipes",
@@ -48,7 +51,7 @@ def _get_restrictions_from_profile(user_id: str) -> list[str]:
         return []
 
 @router.post("/recommend", response_model=RecommendationResponse)
-def get_recommendations(request: RecommendationRequest):
+async def get_recommendations(request: RecommendationRequest):
     intent_clean = request.intent.lower().strip()
     if intent_clean not in ALLOWED_INTENTS:
         valid_options = ", ".join(f"'{i}'" for i in sorted(ALLOWED_INTENTS))
@@ -73,6 +76,32 @@ def get_recommendations(request: RecommendationRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="No fue posible generar las recomendaciones."
         )
+
+    # Cotizar ingredientes en paralelo y calcular costo total
+    pantry_items = [item.lower().strip() for item in (request.shopping_list or [])]
+
+    async with httpx.AsyncClient() as http_client:
+        for rec in llm_results:
+            ingredients = rec.get("ingredients", [])
+            
+            # <--- AQUÍ VA LA LÍNEA --->
+            tasks = [search_lider_via_google_shopping(ing["catalog_query"], http_client) for ing in ingredients]
+            matches = await asyncio.gather(*tasks)
+
+            total_cost = 0.0
+            for idx, ing in enumerate(ingredients):
+                query_lower = ing["catalog_query"].lower()
+                orig_lower = ing["original_name"].lower()
+                
+                # Verificar si el usuario ya lo tiene en despensa
+                already_have = any(p in query_lower or p in orig_lower for p in pantry_items)
+                ing["in_pantry"] = already_have
+                ing["lider_match"] = matches[idx]
+
+                if not already_have:
+                    total_cost += matches[idx].get("price", 0.0)
+
+            rec["total_estimated_cost"] = round(total_cost, 2)
 
     return {
         "user_intent": request.intent,

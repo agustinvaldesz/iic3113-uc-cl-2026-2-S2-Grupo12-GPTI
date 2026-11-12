@@ -1,149 +1,127 @@
-import os
-import json
-import logging
-import time
-import concurrent.futures
-from dotenv import load_dotenv
-from groq import Groq
+import re
+import asyncio
+import httpx
+from fastapi import APIRouter, HTTPException, status
+from app.schemas.recommendations import RecommendationRequest, RecommendationResponse
+from app.services.llm_service import recommend_and_normalize_recipes
+from app.services.supabase_service import supabase
+from app.services.lider_service import search_lider_via_google_shopping
 
-load_dotenv()
+router = APIRouter(
+    prefix="/api/recipes",
+    tags=["Recomendaciones y LLM"]
+)
 
-RECIPES_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "recipes.json")
+ALLOWED_INTENTS = {"ahorro", "saludable", "balance", "vegano", "vegetariano"}
 
-def load_recipes():
-    if not os.path.exists(RECIPES_PATH):
+def _get_restrictions_from_profile(user_id: str) -> list[str]:
+    """Consulta en Supabase las restricciones y dieta guardadas del usuario."""
+    if not supabase:
         return []
-    with open(RECIPES_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+    try:
+        res = supabase.table("user_dietary_profiles")\
+            .select("diet_type, allergies")\
+            .eq("user_id", user_id)\
+            .execute()
+        
+        if not res.data:
+            return []
 
-def _fallback_local_recommendations(intent: str, user_ingredients: list[str] = None, dietary_restrictions: list[str] = None):
-    all_recipes = load_recipes()
-    pantry = [ing.lower().strip() for ing in (user_ingredients or [])]
-    restrictions = [r.lower().strip() for r in (dietary_restrictions or [])]
+        row = res.data[0]
+        restrictions = []
+        
+        # Mapear alergias a frases claras para el LLM
+        allergy_map = {
+            "gluten": "sin gluten",
+            "lactosa": "sin lactosa",
+            "frutos_secos": "sin frutos secos",
+            "mariscos": "sin mariscos"
+        }
+        for a in row.get("allergies", []):
+            if a in allergy_map:
+                restrictions.append(allergy_map[a])
 
-    # Filtrar recetas según categoría o coincidencia básica
-    matching = [r for r in all_recipes if r.get("category", "").lower() == intent.lower()]
-    if not matching:
-        matching = all_recipes[:2]
-    else:
-        matching = matching[:2]
+        # Mapear tipo de dieta
+        if row.get("diet_type") == "vegana":
+            restrictions.append("vegano estricto")
+        elif row.get("diet_type") == "vegetariana":
+            restrictions.append("vegetariano (sin carne ni pescado)")
 
-    results = []
-    for r in matching:
-        structured_ingredients = []
-        for ing in r.get("ingredients", []):
-            ing_lower = ing.lower()
-            already_in_pantry = any(p in ing_lower for p in pantry)
-            
-            structured_ingredients.append({
-                "original_name": ing,
-                "catalog_query": ing,
-                "quantity_needed": "Ya en despensa" if already_in_pantry else "1 unidad"
-            })
+        return restrictions
+    except Exception:
+        return []
 
-        reasons = [f"Perfil orientado a {intent}"]
-        if restrictions:
-            reasons.append(f"Considera restricciones: {', '.join(restrictions)}")
+@router.post("/recommend", response_model=RecommendationResponse)
+async def get_recommendations(request: RecommendationRequest):
+    intent_clean = request.intent.lower().strip()
+    if intent_clean not in ALLOWED_INTENTS:
+        valid_options = ", ".join(f"'{i}'" for i in sorted(ALLOWED_INTENTS))
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Intención no válida. Use una de las siguientes: {valid_options}."
+        )
 
-        results.append({
-            "recipe_id": r.get("id", 1),
-            "title": r.get("title", "Receta recomendada"),
-            "prep_time": r.get("prep_time", "30 mins"),
-            "category": intent,
-            "why_recommended": ". ".join(reasons) + ".",
-            "ingredients": structured_ingredients,
-            "instructions": r.get("instructions", "Seguir las instrucciones habituales.")
-        })
+    # Si la petición trae restricciones, úsalas; si no, cárgalas desde Supabase
+    dietary_restrictions = request.dietary_restrictions
+    if not dietary_restrictions:
+        dietary_restrictions = _get_restrictions_from_profile(request.user_id)
 
-    return results
-
-def _call_groq(prompt: str, api_key: str):
-    client = Groq(api_key=api_key)
-    chat_completion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "system",
-                "content": "Eres el motor de IA de NutriCart. Tu única función es devolver un array JSON válido con las recetas seleccionadas. No agregues texto adicional fuera del JSON."
-            },
-            {"role": "user", "content": prompt}
-        ],
-        model="qwen/qwen3.8-27b",
-        temperature=0.1
+    # 1. Generar recomendaciones escaladas a 'servings' y preferencias extra
+    llm_results = recommend_and_normalize_recipes(
+        intent=intent_clean,
+        user_ingredients=request.shopping_list,
+        dietary_restrictions=dietary_restrictions,
+        servings=request.servings,
+        extra_preferences=request.extra_preferences
     )
-    content = chat_completion.choices[0].message.content.strip()
 
-    if content.startswith("```json"):
-        content = content[7:]
-    if content.startswith("```"):
-        content = content[3:]
-    if content.endswith("```"):
-        content = content[:-3]
-    content = content.strip()
+    if not llm_results:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="No fue posible generar las recomendaciones."
+        )
 
-    data = json.loads(content)
-    if isinstance(data, dict):
-        for val in data.values():
-            if isinstance(val, list):
-                return val
-    return data if isinstance(data, list) else None
+    # 2. Cotizar ingredientes faltantes en paralelo y calcular costo total
+    pantry_items = [item.lower().strip() for item in (request.shopping_list or [])]
 
-def recommend_and_normalize_recipes(
-    intent: str,
-    user_ingredients: list[str] = None,
-    dietary_restrictions: list[str] = None
-):
-    recipes = load_recipes()
-    pantry = user_ingredients or []
-    restrictions = dietary_restrictions or []
+    async with httpx.AsyncClient() as http_client:
+        for rec in llm_results:
+            rec.setdefault("servings", request.servings)
+            ingredients = rec.get("ingredients", [])
+            
+            # Identificar qué ingredientes ya están en despensa antes de cotizar
+            tasks = []
+            task_indices = []
+            for idx, ing in enumerate(ingredients):
+                query_lower = ing["catalog_query"].lower()
+                orig_lower = ing["original_name"].lower()
+                already_have = any(p in query_lower or p in orig_lower for p in pantry_items)
+                ing["in_pantry"] = already_have
 
-    prompt = f"""
-    Intención del usuario: {intent}.
-    Restricciones alimentarias obligatorias: {restrictions}.
-    Ingredientes disponibles en despensa: {pantry}.
-    Recetas disponibles en el repositorio:
-    {json.dumps(recipes, ensure_ascii=False)}
+                if already_have:
+                    ing["lider_match"] = None
+                else:
+                    tasks.append(search_lider_via_google_shopping(ing["catalog_query"], http_client))
+                    task_indices.append(idx)
 
-    Instrucciones estrictas:
-    1. Recomienda entre 1 y 2 recetas que coincidan con la intención '{intent}'.
-    2. RESPETA ESTRICTAMENTE las restricciones {restrictions}. Si una receta contiene ingredientes incompatibles (por ejemplo gluten o lactosa), sustitúyelos por una alternativa apta o prioriza recetas que naturalmente cumplan el requisito.
-    3. En 'why_recommended', justifica la elección mencionando cómo se adapta al perfil y a las restricciones alimentarias.
-    4. Para cada ingrediente genera un 'catalog_query' comercial limpio para supermercados Lider de Chile (ej: 'harina sin gluten', 'leche sin lactosa 1L', 'pechuga de pollo').
-    5. Responde ÚNICAMENTE un array JSON válido con este formato exacto:
-    [
-      {{
-        "recipe_id": 1,
-        "title": "Nombre de la receta",
-        "prep_time": "30 mins",
-        "category": "{intent}",
-        "why_recommended": "Justificación",
-        "ingredients": [
-          {{
-            "original_name": "Nombre original",
-            "catalog_query": "Búsqueda Lider",
-            "quantity_needed": "1 unidad"
-          }}
-        ],
-        "instructions": "Pasos"
-      }}
-    ]
-    """
+            # Ejecutar consultas solo para los ingredientes que faltan comprar
+            if tasks:
+                matches = await asyncio.gather(*tasks)
+                for task_idx, match_result in zip(task_indices, matches):
+                    ingredients[task_idx]["lider_match"] = match_result
 
-    groq_key = os.getenv("GROQ_API_KEY")
-    if groq_key:
-        start_time = time.time()
-        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-            future = executor.submit(_call_groq, prompt, groq_key)
-            try:
-                result = future.result(timeout=6.5)
-                elapsed = time.time() - start_time
-                if result:
-                    logging.info(f"Respuesta generada en vivo por Groq en {elapsed:.2f}s.")
-                    return result
-            except concurrent.futures.TimeoutError:
-                elapsed = time.time() - start_time
-                logging.warning(f"Groq superó el límite tras {elapsed:.2f}s. Activando fallback local.")
-            except Exception as e:
-                elapsed = time.time() - start_time
-                logging.warning(f"Error en Groq tras {elapsed:.2f}s: {repr(e)}. Activando fallback local.")
+            # Calcular costo total considerando la cantidad de unidades necesarias
+            total_cost = 0.0
+            for ing in ingredients:
+                if not ing["in_pantry"] and ing.get("lider_match"):
+                    qty_str = str(ing.get("quantity_needed", "1"))
+                    match_num = re.search(r"\d+", qty_str)
+                    units_to_buy = int(match_num.group()) if match_num else 1
+                    total_cost += ing["lider_match"].get("price", 0.0) * units_to_buy
 
-    return _fallback_local_recommendations(intent, user_ingredients, dietary_restrictions)
+            rec["total_estimated_cost"] = round(total_cost, 2)
+
+    return {
+        "user_intent": request.intent,
+        "recommendations": llm_results
+    }
