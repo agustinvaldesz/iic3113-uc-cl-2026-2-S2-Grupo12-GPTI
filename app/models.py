@@ -75,4 +75,24 @@ ALLERGY_LABELS = {
     "mariscos": "Mariscos",
 }
 
+
+# Esquemas para la recomendación del LLM
+class IngredientItem(BaseModel):
+    original_name: str
+    catalog_query: str  # Término exacto para buscar en el catálogo de Lider (ej: "Arroz 1kg")
+    quantity_needed: str
+
+class RecipeRecommendation(BaseModel):
+    recipe_id: Optional[int] = None
+    title: str
+    prep_time: str
+    category: str
+    why_recommended: str
+    ingredients: List[IngredientItem]
+    instructions: str
+
+class RecommendationResponse(BaseModel):
+    user_intent: str
+    recommendations: List[RecipeRecommendation]
+
 TokenResponse.model_rebuild()
