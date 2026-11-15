@@ -23,12 +23,14 @@ class RecipeDB(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False, index=True)
-    intent_category = Column(String, nullable=False)  # "ahorro", "saludable", "balance"
+    intent_category = Column(String, nullable=False, default="balance")  # "ahorro", "saludable", "balance"
     diet_type = Column(String, nullable=False) # ej: "con_carne"
     allergens = Column(JSON, nullable=False, default=list)  # ej: ["gluten", "lactosa"]
     servings = Column(Integer, nullable=False) # Porciones por receta
     prep_time = Column(String, nullable=True)
     instructions = Column(Text, nullable=False)
+    ingredient_lines = Column(JSON, nullable=False, default=list)  # Ej: ["450 g de carne molida", "1 cebolla"]
+    diet_focus = Column(JSON, nullable=False, default=list)  # Ej: ["balanceada", "alta_proteina"]
     status = Column(String, nullable=False, default="pendiente") # "pendiente", "aprobada", "rechazada"
     source = Column(String, nullable=False, default="manual")  # "manual", "llm" o "scraping"
     created_by = Column(Integer, ForeignKey("users.id"), nullable=True)  # Usuario que la subió o solicitó al LLM
@@ -93,3 +95,35 @@ class IngredientProductDB(Base):
     ingredient = relationship("IngredientDB")
     product = relationship("ProductCacheDB")
 
+class MealPlanDB(Base):
+    """Menú generado para un usuario."""
+    __tablename__ = "meal_plans"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    name = Column(String, nullable=False)
+    start_date = Column(String, nullable=False)  # YYYY-MM-DD
+    end_date = Column(String, nullable=False)    # YYYY-MM-DD
+    diners = Column(Integer, nullable=False)
+    request = Column(JSON, nullable=False)       # Formulario original (para regenerar o auditar)
+    total_cost = Column(Integer, nullable=True)  # Total al momento de crearlo
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    slots = relationship("MealPlanSlotDB", back_populates="plan", cascade="all, delete-orphan",
+                         order_by="MealPlanSlotDB.id")
+
+class MealPlanSlotDB(Base):
+    """Una fecha y una comida (almuerzo o cena)."""
+    __tablename__ = "meal_plan_slots"
+
+    id = Column(Integer, primary_key=True, index=True)
+    plan_id = Column(Integer, ForeignKey("meal_plans.id", ondelete="CASCADE"), nullable=False)
+    date = Column(String, nullable=False) # YYYY-MM-DD
+    meal = Column(String, nullable=False) # "almuerzo" o "cena"
+    origin = Column(String, nullable=False) # "casera" o "fuera"
+    recipe_id = Column(Integer, ForeignKey("recipes.id", ondelete="SET NULL"), nullable=True)
+    recipe_title = Column(String, nullable=True)  # Copia del título por si la receta cambia
+    portions = Column(Integer, nullable=False, default=0)
+    is_leftover = Column(Boolean, default=False)  # True si se come lo cocinado en un espacio anterior
+
+    plan = relationship("MealPlanDB", back_populates="slots")

@@ -242,6 +242,9 @@ def quote_items(db: Session, items: list[dict], pantry: Optional[list[str]] = No
         amount, unit = parse_quantity(original)
         if unit is None and item.get("quantity_needed"):
             amount, unit = parse_quantity(item["quantity_needed"])
+        scale = item.get("scale") or 1  # Factor de escala por número de personas
+        if amount is not None:
+            amount *= scale
         needed = _needed_in_base_unit(amount, unit, ingredient.default_unit, meta[name]["unit_weight_g"])
         if needed is None:
             g["unknown"] += amount if unit == "paquete" and amount else 1

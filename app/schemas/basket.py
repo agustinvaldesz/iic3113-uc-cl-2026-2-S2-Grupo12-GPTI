@@ -6,6 +6,7 @@ class QuoteItem(BaseModel):
     original_name: str
     catalog_query: Optional[str] = None
     quantity_needed: Optional[str] = None
+    scale: float = Field(default=1.0, gt=0)  # Multiplica la cantidad
 
 
 class QuoteRequest(BaseModel):

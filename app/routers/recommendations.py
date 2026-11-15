@@ -5,8 +5,9 @@ from app.database import get_db
 from app.dependencies import get_current_user
 from app.models_db import UserDB
 from app.schemas.recommendations import RecommendationRequest, RecommendationResponse
-from app.services.llm_service import recommend_and_normalize_recipes, load_recipes
+from app.services.llm_service import recommend_and_normalize_recipes
 from app.services.recipe_filter import filter_recipes, get_user_restrictions, restrictions_to_text
+from app.services.recipe_repository import get_approved_recipes
 
 router = APIRouter(
     prefix="/api/recipes",
@@ -32,7 +33,7 @@ def get_recommendations(
 
     # SC-1: el perfil alimentario guardado (con consentimiento) se aplica como filtro excluyente
     diet_type, allergies = get_user_restrictions(db, current_user.id)
-    all_recipes = load_recipes()
+    all_recipes = get_approved_recipes(db)
     allowed_recipes = filter_recipes(all_recipes, diet_type, allergies)
     excluded = len(all_recipes) - len(allowed_recipes)
 

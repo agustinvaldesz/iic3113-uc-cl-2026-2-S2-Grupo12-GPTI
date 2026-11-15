@@ -34,3 +34,10 @@ def get_current_user(
         raise credentials_error
 
     return user
+
+def get_current_manager(current_user: UserDB = Depends(get_current_user)) -> UserDB:
+    """Solo gestores de recetas y administradores (RN-03)."""
+    if current_user.role not in ("gestor", "admin"):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail="Solo un gestor de recetas o un administrador puede hacer esto.")
+    return current_user

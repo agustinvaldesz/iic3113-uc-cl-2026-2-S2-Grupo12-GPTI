@@ -25,7 +25,11 @@
       "Albahaca fresca picada",
       "Queso parmesano rallado"
     ],
-    "instructions": "Cocinar la pasta según instrucciones. Dorar la carne en un sartén, sazonar con cebolla, ajo, condimento italiano, albahaca seca, sal y pimienta. Añadir salsa de tomate y caldo de carne, hervir a fuego lento. Integrar la pasta cocida, agregar la mozzarella hasta derretir y coronar con queso ricotta, albahaca y parmesano."
+    "instructions": "Cocinar la pasta según instrucciones. Dorar la carne en un sartén, sazonar con cebolla, ajo, condimento italiano, albahaca seca, sal y pimienta. Añadir salsa de tomate y caldo de carne, hervir a fuego lento. Integrar la pasta cocida, agregar la mozzarella hasta derretir y coronar con queso ricotta, albahaca y parmesano.",
+    "servings": 6,
+    "diet_focus": [
+      "alta_proteina"
+    ]
   },
   {
     "id": 2,
@@ -50,7 +54,11 @@
       "1 cucharada de harina de trigo",
       "1/4 taza de agua"
     ],
-    "instructions": "Cocinar los coditos. Dorar la carne molida y añadir el sazonador para tacos disuelto en agua junto con el pimiento picado. Licuar el queso cottage con la leche, salsa mexicana y harina, y verter sobre la carne junto al queso cheddar hasta derretir. Incorporar la pasta escurrida a la mezcla de queso y carne."
+    "instructions": "Cocinar los coditos. Dorar la carne molida y añadir el sazonador para tacos disuelto en agua junto con el pimiento picado. Licuar el queso cottage con la leche, salsa mexicana y harina, y verter sobre la carne junto al queso cheddar hasta derretir. Incorporar la pasta escurrida a la mezcla de queso y carne.",
+    "servings": 6,
+    "diet_focus": [
+      "alta_proteina"
+    ]
   },
   {
     "id": 3,
@@ -77,7 +85,11 @@
       "1 cucharadita de salsa de pescado",
       "1 cucharadita de aceite de sésamo tostado"
     ],
-    "instructions": "Marinar la carne con maicena, 3 cdas de salsa de soya y pimienta, luego sellar a fuego alto y reservar. Sofreír el ajo y el arroz frío en el sartén hasta dorar levemente, hacer un hueco al centro para cocinar y revolver los huevos. Añadir los vegetales congelados, salsa (soya restante, salsa de ostras, salsa de pescado y aceite de sésamo), reintegrar la carne y cebollín, saltear todo junto."
+    "instructions": "Marinar la carne con maicena, 3 cdas de salsa de soya y pimienta, luego sellar a fuego alto y reservar. Sofreír el ajo y el arroz frío en el sartén hasta dorar levemente, hacer un hueco al centro para cocinar y revolver los huevos. Añadir los vegetales congelados, salsa (soya restante, salsa de ostras, salsa de pescado y aceite de sésamo), reintegrar la carne y cebollín, saltear todo junto.",
+    "servings": 5,
+    "diet_focus": [
+      "balanceada"
+    ]
   },
   {
     "id": 4,
@@ -103,7 +115,12 @@
       "2 cebollines picados",
       "Semillas de sésamo y hojuelas de ají"
     ],
-    "instructions": "Cocinar el pollo sazonado en sartén o freidora de aire hasta dorar y reservar. Hervir la mezcla de aminos de coco, sirope, condimentos y la maicena disuelta en agua hasta que espese la salsa, luego integrar el pollo. Calentar y mezclar el arroz basmati con el arroz de coliflor y cebollín; servir con el pollo teriyaki y trozos de piña."
+    "instructions": "Cocinar el pollo sazonado en sartén o freidora de aire hasta dorar y reservar. Hervir la mezcla de aminos de coco, sirope, condimentos y la maicena disuelta en agua hasta que espese la salsa, luego integrar el pollo. Calentar y mezclar el arroz basmati con el arroz de coliflor y cebollín; servir con el pollo teriyaki y trozos de piña.",
+    "servings": 4,
+    "diet_focus": [
+      "balanceada",
+      "baja_grasas"
+    ]
   },
   {
     "id": 5,
@@ -133,7 +150,12 @@
       "1/2 taza de cilantro picado y cebollín",
       "2 cucharadas de almendras laminadas tostadas"
     ],
-    "instructions": "Marinar el pollo con soya, vinagre de arroz, aceite de sésamo, miel y condimentos por 20 minutos y cocinar en sartén hasta dorar. Batir el yogur griego, mayonesa, salsa sweet chili, sriracha, miel restante y vinagre de arroz. Mezclar el repollo, repollitos de Bruselas, edamame, cilantro y cebollín con la mitad del aderezo, coronar con el pollo picado, el resto de salsa y almendras tostadas."
+    "instructions": "Marinar el pollo con soya, vinagre de arroz, aceite de sésamo, miel y condimentos por 20 minutos y cocinar en sartén hasta dorar. Batir el yogur griego, mayonesa, salsa sweet chili, sriracha, miel restante y vinagre de arroz. Mezclar el repollo, repollitos de Bruselas, edamame, cilantro y cebollín con la mitad del aderezo, coronar con el pollo picado, el resto de salsa y almendras tostadas.",
+    "servings": 5,
+    "diet_focus": [
+      "alta_proteina",
+      "baja_carbohidratos"
+    ]
   },
   {
     "id": 6,
@@ -161,7 +183,11 @@
       "1/3 taza de caldo de verduras",
       "1 cucharadita de maicena con 1 cda de agua"
     ],
-    "instructions": "Rebozar el tofu seco en maicena y dorar en sartén con aceite hasta que quede crujiente, luego reservar. Saltear el brócoli, pimiento y champiñones durante 5 minutos. Verter la salsa preparada con soya, caldo vegetal, sirope, condimentos y maicena disuelta; dejar espesar, incorporar el tofu dorado y servir acompañado de arroz caliente."
+    "instructions": "Rebozar el tofu seco en maicena y dorar en sartén con aceite hasta que quede crujiente, luego reservar. Saltear el brócoli, pimiento y champiñones durante 5 minutos. Verter la salsa preparada con soya, caldo vegetal, sirope, condimentos y maicena disuelta; dejar espesar, incorporar el tofu dorado y servir acompañado de arroz caliente.",
+    "diet_focus": [
+      "balanceada",
+      "baja_grasas"
+    ]
   },
   {
     "id": 7,
@@ -186,7 +212,10 @@
       "3 cucharadas de aceite de oliva extra virgen",
       "Sal y pimienta"
     ],
-    "instructions": "Cocinar la pasta sin gluten al dente y reservar un poco del agua de cocción. Procesar la albahaca con semillas de girasol, ajo, jugo de limón, parmesano y aceite de oliva para el pesto libre de frutos secos. Dorar el pollo en sartén, agregar tomates cherry y espinacas, e integrar la pasta con el pesto y unas cucharadas del agua de cocción."
+    "instructions": "Cocinar la pasta sin gluten al dente y reservar un poco del agua de cocción. Procesar la albahaca con semillas de girasol, ajo, jugo de limón, parmesano y aceite de oliva para el pesto libre de frutos secos. Dorar el pollo en sartén, agregar tomates cherry y espinacas, e integrar la pasta con el pesto y unas cucharadas del agua de cocción.",
+    "diet_focus": [
+      "balanceada"
+    ]
   },
   {
     "id": 8,
@@ -212,7 +241,11 @@
       "1 cucharadita de azúcar o miel",
       "1/4 cucharadita de pimienta blanca"
     ],
-    "instructions": "Dorar la carne de pavo molida a fuego alto y reservar. Cuajar los huevos revueltos brevemente y retirar. Saltear el ajo y el arroz frío en sartén, añadir arvejas y choclo, reincorporar el pavo y el huevo, y bañar con la salsa preparada con soya, caldo de champiñones (sustituto seguro de salsas marinas) y aceite de sésamo; mezclar y finalizar con cebollín."
+    "instructions": "Dorar la carne de pavo molida a fuego alto y reservar. Cuajar los huevos revueltos brevemente y retirar. Saltear el ajo y el arroz frío en sartén, añadir arvejas y choclo, reincorporar el pavo y el huevo, y bañar con la salsa preparada con soya, caldo de champiñones (sustituto seguro de salsas marinas) y aceite de sésamo; mezclar y finalizar con cebollín.",
+    "diet_focus": [
+      "balanceada",
+      "baja_grasas"
+    ]
   },
   {
     "id": 9,
@@ -237,7 +270,10 @@
       "2 tazas de arroz basmati cocido",
       "Cilantro fresco"
     ],
-    "instructions": "Marinar el pollo con el yogur vegetal, limón y especias por 15 minutos, luego sellar en sartén y reservar. Sofreír la cebolla y el ajo con el garam masala, incorporar el puré de tomate y la crema de coco para formar una salsa suave. Añadir el pollo a la salsa, cocinar a fuego lento por 10 minutos y servir sobre arroz basmati con cilantro."
+    "instructions": "Marinar el pollo con el yogur vegetal, limón y especias por 15 minutos, luego sellar en sartén y reservar. Sofreír la cebolla y el ajo con el garam masala, incorporar el puré de tomate y la crema de coco para formar una salsa suave. Añadir el pollo a la salsa, cocinar a fuego lento por 10 minutos y servir sobre arroz basmati con cilantro.",
+    "diet_focus": [
+      "alta_proteina"
+    ]
   },
   {
     "id": 10,
@@ -261,6 +297,9 @@
       "1/4 taza de agua",
       "1 cucharadita de maicena"
     ],
-    "instructions": "Sellar las tiras de vacuno a fuego alto en aceite infusionado con ajo y retirar. Saltear las zanahorias, pimiento rojo y zapallito italiano hasta que queden al dente. Verter la salsa hecha con tamari, maple, jengibre, aceite de sésamo y maicena disuelta; cuando espese, reincorporar la carne y la parte verde del cebollín por 1 minuto antes de servir con arroz."
+    "instructions": "Sellar las tiras de vacuno a fuego alto en aceite infusionado con ajo y retirar. Saltear las zanahorias, pimiento rojo y zapallito italiano hasta que queden al dente. Verter la salsa hecha con tamari, maple, jengibre, aceite de sésamo y maicena disuelta; cuando espese, reincorporar la carne y la parte verde del cebollín por 1 minuto antes de servir con arroz.",
+    "diet_focus": [
+      "balanceada"
+    ]
   }
 ]
