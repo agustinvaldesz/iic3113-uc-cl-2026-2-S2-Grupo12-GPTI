@@ -4,6 +4,11 @@
     "title": "Lasaña boloñesa",
     "category": "alto en proteína",
     "prep_time": "30 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "gluten",
+      "lactosa"
+    ],
     "ingredients": [
       "450 g de carne molida magra (96/4)",
       "1 cebolla blanca pequeña picada",
@@ -27,6 +32,11 @@
     "title": "Macarrones con carne alto en proteína",
     "category": "alto en proteína",
     "prep_time": "20 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "gluten",
+      "lactosa"
+    ],
     "ingredients": [
       "450 g de carne molida magra (96/4)",
       "1 paquete de sazonador para tacos",
@@ -47,6 +57,11 @@
     "title": "Arroz Frito con Carne estilo Oriental",
     "category": "balance",
     "prep_time": "30 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "gluten",
+      "mariscos"
+    ],
     "ingredients": [
       "680 g de carne de vacuno magra en tiras finas",
       "2 cucharaditas de maicena",
@@ -69,6 +84,10 @@
     "title": "Pollo teriyaki con arroz",
     "category": "saludable",
     "prep_time": "25 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "gluten"
+    ],
     "ingredients": [
       "450 g de pechuga de pollo cortada en cubos",
       "1/2 taza de aminos de coco o salsa de soya",
@@ -91,6 +110,12 @@
     "title": "Ensalada de Pollo Cremosa y Picante",
     "category": "saludable",
     "prep_time": "35 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "gluten",
+      "lactosa",
+      "frutos_secos"
+    ],
     "ingredients": [
       "680 g de pechuga de pollo en rodajas finas",
       "2 cucharadas de salsa de soya",
@@ -115,6 +140,10 @@
     "title": "Salteado de Tofu y Vegetales en Salsa de Sésamo",
     "category": "vegano",
     "prep_time": "25 mins",
+    "diet_type": "vegana",
+    "allergens": [
+      "gluten"
+    ],
     "ingredients": [
       "450 g de tofu firme prensado en cubos",
       "1 cucharada de maicena",
@@ -139,6 +168,10 @@
     "title": "Cazuela de Pasta con Pollo al Pesto Rápido",
     "category": "sin gluten y sin frutos secos",
     "prep_time": "30 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "lactosa"
+    ],
     "ingredients": [
       "500 g de pechuga de pollo en cubos",
       "250 g de pasta corta sin gluten certificada",
@@ -160,6 +193,10 @@
     "title": "Arroz Salteado con Pavo al Estilo Oriental",
     "category": "libre de pescado y mariscos",
     "prep_time": "25 mins",
+    "diet_type": "con_carne",
+    "allergens": [
+      "gluten"
+    ],
     "ingredients": [
       "450 g de pechuga de pavo molida magra",
       "3 tazas de arroz cocido frío",
@@ -182,6 +219,8 @@
     "title": "Pollo Tikka Cremoso con Arroz Basmati",
     "category": "sin lácteos",
     "prep_time": "35 mins",
+    "diet_type": "con_carne",
+    "allergens": [],
     "ingredients": [
       "500 g de pechuga de pollo en cubos",
       "1/2 taza de yogur vegetal natural sin azúcar (coco o soya)",
@@ -205,6 +244,8 @@
     "title": "Salteado de Ternera con Verduras y Arroz",
     "category": "digestión sensible (bajo en FODMAP)",
     "prep_time": "25 mins",
+    "diet_type": "con_carne",
+    "allergens": [],
     "ingredients": [
       "450 g de carne de vacuno magra en tiras finas",
       "1 cucharada de aceite de oliva infusionado con ajo",

@@ -8,6 +8,15 @@ from app.schemas.menus import RecipeDetailOut
 from app.services.llm_service import recommend_and_normalize_recipes, load_recipes
 from app.services.supabase_service import supabase
 from app.services.lider_service import search_lider_via_google_shopping
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
+from app.database import get_db
+from app.dependencies import get_current_user
+from app.models_db import UserDB
+from app.schemas.recommendations import RecommendationRequest, RecommendationResponse
+from app.services.llm_service import recommend_and_normalize_recipes, load_recipes
+from app.services.recipe_filter import filter_recipes, get_user_restrictions, restrictions_to_text
 
 router = APIRouter(
     prefix="/api/recipes",
@@ -16,42 +25,6 @@ router = APIRouter(
 
 ALLOWED_INTENTS = {"ahorro", "saludable", "balance", "vegano", "vegetariano"}
 
-def _get_restrictions_from_profile(user_id: str) -> list[str]:
-    """Consulta en Supabase las restricciones y dieta guardadas del usuario."""
-    if not supabase:
-        return []
-    try:
-        res = supabase.table("user_dietary_profiles")\
-            .select("diet_type, allergies")\
-            .eq("user_id", user_id)\
-            .execute()
-        
-        if not res.data:
-            return []
-
-        row = res.data[0]
-        restrictions = []
-        
-        # Mapear alergias a frases claras para el LLM
-        allergy_map = {
-            "gluten": "sin gluten",
-            "lactosa": "sin lactosa",
-            "frutos_secos": "sin frutos secos",
-            "mariscos": "sin mariscos"
-        }
-        for a in row.get("allergies", []):
-            if a in allergy_map:
-                restrictions.append(allergy_map[a])
-
-        # Mapear tipo de dieta
-        if row.get("diet_type") == "vegana":
-            restrictions.append("vegano estricto")
-        elif row.get("diet_type") == "vegetariana":
-            restrictions.append("vegetariano (sin carne ni pescado)")
-
-        return restrictions
-    except Exception:
-        return []
 
 @router.post("/recommend", response_model=RecommendationResponse)
 async def get_recommendations(request: RecommendationRequest):
@@ -63,10 +36,22 @@ async def get_recommendations(request: RecommendationRequest):
             detail=f"Intención no válida. Use una de las siguientes: {valid_options}."
         )
 
-    # Si la petición trae restricciones, úsalas; si no, cárgalas desde Supabase
-    dietary_restrictions = request.dietary_restrictions
-    if not dietary_restrictions:
-        dietary_restrictions = _get_restrictions_from_profile(request.user_id)
+    # SC-1: el perfil alimentario guardado (con consentimiento) se aplica como filtro excluyente
+    diet_type, allergies = get_user_restrictions(db, current_user.id)
+    all_recipes = load_recipes()
+    allowed_recipes = filter_recipes(all_recipes, diet_type, allergies)
+    excluded = len(all_recipes) - len(allowed_recipes)
+
+    if not allowed_recipes:
+        return {
+            "user_intent": request.intent,
+            "recommendations": [],
+            "excluded_by_restrictions": excluded,
+            "message": "No encontramos recetas compatibles con tus restricciones alimentarias. "
+                       "Puedes revisar tu perfil alimentario o probar más tarde.",
+        }
+
+    dietary_restrictions = restrictions_to_text(diet_type, allergies) + list(request.dietary_restrictions or [])
 
     # 1. Generar recomendaciones escaladas a 'servings' y preferencias extra
     llm_results = recommend_and_normalize_recipes(
@@ -75,6 +60,7 @@ async def get_recommendations(request: RecommendationRequest):
         dietary_restrictions=dietary_restrictions,
         servings=request.servings,
         extra_preferences=request.extra_preferences
+        recipes=allowed_recipes,
     )
 
     if not llm_results:

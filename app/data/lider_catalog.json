@@ -1,0 +1,1307 @@
+{
+  "_nota": "Catálogo semilla con precios REFERENCIALES en CLP (noviembre 2026). Los SKU 'REF-xxxx' no son SKU reales de Lider: reemplazarlos por los del sitio cuando se verifiquen. El producto 'is_default' representa el mapeo base de un SKU por ingrediente; los demás son alternativas (otra marca o formato) para SC-2.",
+  "ingredients": [
+    {
+      "name": "carne molida",
+      "category": "carnes",
+      "default_unit": "g",
+      "aliases": [
+        "carne molida"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0001",
+          "name": "Carne molida 4% grasa Super Cerdo/Vacuno bandeja 500 g",
+          "price": 5490,
+          "package_quantity": 500,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0002",
+          "name": "Carne molida 7% grasa Marca Líder 1 kg",
+          "price": 8990,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        },
+        {
+          "sku": "REF-0003",
+          "name": "Carne molida 10% grasa granel kg",
+          "price": 7490,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": true,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "carne de vacuno",
+      "category": "carnes",
+      "default_unit": "g",
+      "aliases": [
+        "carne de vacuno",
+        "ternera",
+        "vacuno"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0004",
+          "name": "Posta negra de vacuno envasada 1 kg",
+          "price": 11990,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0005",
+          "name": "Asiento de vacuno granel kg",
+          "price": 9990,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": true,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "pechuga de pollo",
+      "category": "carnes",
+      "default_unit": "g",
+      "aliases": [
+        "pechuga de pollo",
+        "pollo"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0006",
+          "name": "Pechuga de pollo deshuesada Ariztía 1 kg",
+          "price": 7290,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0007",
+          "name": "Pechuga de pollo deshuesada Marca Líder 1 kg",
+          "price": 6190,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        },
+        {
+          "sku": "REF-0008",
+          "name": "Filetitos de pollo Super Pollo 700 g",
+          "price": 5490,
+          "package_quantity": 700,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "pavo molido",
+      "category": "carnes",
+      "default_unit": "g",
+      "aliases": [
+        "pavo molida",
+        "pavo molido",
+        "pavo"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0009",
+          "name": "Carne molida de pavo Sopraval 500 g",
+          "price": 4290,
+          "package_quantity": 500,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0010",
+          "name": "Carne molida de pavo Marca Líder 500 g",
+          "price": 3790,
+          "package_quantity": 500,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "tofu",
+      "category": "proteina vegetal",
+      "default_unit": "g",
+      "aliases": [
+        "tofu"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0011",
+          "name": "Tofu firme Kioto 400 g",
+          "price": 2990,
+          "package_quantity": 400,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0012",
+          "name": "Tofu firme Marca Líder 300 g",
+          "price": 1990,
+          "package_quantity": 300,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "huevos",
+      "category": "lacteos y huevos",
+      "default_unit": "unidad",
+      "aliases": [
+        "huevos",
+        "huevo"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0013",
+          "name": "Huevos blancos Santa Marta bandeja 12 un",
+          "price": 3990,
+          "package_quantity": 12,
+          "package_unit": "unidad",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0014",
+          "name": "Huevos blancos Marca Líder bandeja 6 un",
+          "price": 1890,
+          "package_quantity": 6,
+          "package_unit": "unidad",
+          "sold_by_weight": false,
+          "is_default": false
+        },
+        {
+          "sku": "REF-0015",
+          "name": "Huevos blancos Marca Líder bandeja 30 un",
+          "price": 8490,
+          "package_quantity": 30,
+          "package_unit": "unidad",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "leche",
+      "category": "lacteos y huevos",
+      "default_unit": "ml",
+      "aliases": [
+        "leche entera",
+        "leche semidescremada",
+        "leche"
+      ],
+      "exclude": [
+        "coco",
+        "vegetal"
+      ],
+      "products": [
+        {
+          "sku": "REF-0016",
+          "name": "Leche semidescremada Colún 1 L",
+          "price": 1190,
+          "package_quantity": 1000,
+          "package_unit": "ml",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0017",
+          "name": "Leche semidescremada Marca Líder 1 L",
+          "price": 990,
+          "package_quantity": 1000,
+          "package_unit": "ml",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "queso mozzarella",
+      "category": "lacteos y huevos",
+      "default_unit": "g",
+      "aliases": [
+        "mozzarella"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0018",
+          "name": "Queso mozzarella rallado Colún 200 g",
+          "price": 3290,
+          "package_quantity": 200,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0019",
+          "name": "Queso mozzarella rallado Marca Líder 200 g",
+          "price": 2690,
+          "package_quantity": 200,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "queso ricotta",
+      "category": "lacteos y huevos",
+      "default_unit": "g",
+      "aliases": [
+        "ricotta"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0020",
+          "name": "Queso ricotta Soprole 250 g",
+          "price": 2890,
+          "package_quantity": 250,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        }
+      ]
+    },
+    {
+      "name": "queso parmesano",
+      "category": "lacteos y huevos",
+      "default_unit": "g",
+      "aliases": [
+        "parmesano"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0021",
+          "name": "Queso parmesano rallado Colún 80 g",
+          "price": 2390,
+          "package_quantity": 80,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0022",
+          "name": "Queso parmesano rallado Marca Líder 100 g",
+          "price": 2190,
+          "package_quantity": 100,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "queso cottage",
+      "category": "lacteos y huevos",
+      "default_unit": "g",
+      "aliases": [
+        "cottage"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0023",
+          "name": "Queso cottage Soprole 250 g",
+          "price": 1990,
+          "package_quantity": 250,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0024",
+          "name": "Queso cottage Marca Líder 250 g",
+          "price": 1690,
+          "package_quantity": 250,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "queso cheddar",
+      "category": "lacteos y huevos",
+      "default_unit": "g",
+      "aliases": [
+        "cheddar"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0025",
+          "name": "Queso cheddar rallado Colún 150 g",
+          "price": 2790,
+          "package_quantity": 150,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0026",
+          "name": "Queso cheddar laminado Marca Líder 250 g",
+          "price": 3290,
+          "package_quantity": 250,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "yogur griego",
+      "category": "lacteos y huevos",
+      "default_unit": "g",
+      "aliases": [
+        "yogur griego",
+        "yogurt griego"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0027",
+          "name": "Yogur griego natural Soprole 900 g",
+          "price": 4290,
+          "package_quantity": 900,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0028",
+          "name": "Yogur griego natural Marca Líder 500 g",
+          "price": 2190,
+          "package_quantity": 500,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "yogur vegetal",
+      "category": "lacteos y huevos",
+      "default_unit": "g",
+      "aliases": [
+        "yogur vegetal",
+        "yogurt vegetal"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0029",
+          "name": "Yogur vegetal de coco natural Silk 400 g",
+          "price": 3490,
+          "package_quantity": 400,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        }
+      ]
+    },
+    {
+      "name": "leche de coco",
+      "category": "despensa",
+      "default_unit": "ml",
+      "aliases": [
+        "leche de coco",
+        "crema de coco"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0030",
+          "name": "Leche de coco en lata Thai Kitchen 400 ml",
+          "price": 2990,
+          "package_quantity": 400,
+          "package_unit": "ml",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0031",
+          "name": "Leche de coco en lata Marca Líder 400 ml",
+          "price": 1990,
+          "package_quantity": 400,
+          "package_unit": "ml",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "arroz",
+      "category": "despensa",
+      "default_unit": "g",
+      "aliases": [
+        "arroz"
+      ],
+      "exclude": [
+        "coliflor"
+      ],
+      "products": [
+        {
+          "sku": "REF-0032",
+          "name": "Arroz grado 1 Tucapel 1 kg",
+          "price": 1990,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0033",
+          "name": "Arroz grado 2 Marca Líder 1 kg",
+          "price": 1290,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        },
+        {
+          "sku": "REF-0034",
+          "name": "Arroz grado 1 Tucapel 5 kg",
+          "price": 8490,
+          "package_quantity": 5000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "arroz de coliflor",
+      "category": "congelados",
+      "default_unit": "g",
+      "aliases": [
+        "arroz de coliflor"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0035",
+          "name": "Arroz de coliflor congelado Minuto Verde 400 g",
+          "price": 2790,
+          "package_quantity": 400,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        }
+      ]
+    },
+    {
+      "name": "pasta corta",
+      "category": "despensa",
+      "default_unit": "g",
+      "aliases": [
+        "rigatoni",
+        "coditos",
+        "macarrones",
+        "pasta corta",
+        "penne"
+      ],
+      "exclude": [
+        "sin gluten"
+      ],
+      "products": [
+        {
+          "sku": "REF-0036",
+          "name": "Pasta rigatoni Carozzi 400 g",
+          "price": 1390,
+          "package_quantity": 400,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0037",
+          "name": "Pasta corta Marca Líder 400 g",
+          "price": 790,
+          "package_quantity": 400,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        },
+        {
+          "sku": "REF-0038",
+          "name": "Pasta corta Lucchetti 1 kg",
+          "price": 2290,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "pasta sin gluten",
+      "category": "despensa",
+      "default_unit": "g",
+      "aliases": [
+        "pasta corta sin gluten",
+        "pasta sin gluten"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0039",
+          "name": "Pasta penne sin gluten Barilla 400 g",
+          "price": 2990,
+          "package_quantity": 400,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        }
+      ]
+    },
+    {
+      "name": "harina",
+      "category": "despensa",
+      "default_unit": "g",
+      "aliases": [
+        "harina de trigo",
+        "harina"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0040",
+          "name": "Harina sin polvos Selecta 1 kg",
+          "price": 1490,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0041",
+          "name": "Harina sin polvos Marca Líder 1 kg",
+          "price": 990,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "maicena",
+      "category": "despensa",
+      "default_unit": "g",
+      "aliases": [
+        "maicena",
+        "harina de tapioca"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0042",
+          "name": "Maicena 200 g",
+          "price": 1290,
+          "package_quantity": 200,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0043",
+          "name": "Fécula de maíz Marca Líder 400 g",
+          "price": 1490,
+          "package_quantity": 400,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "salsa de tomate",
+      "category": "despensa",
+      "default_unit": "ml",
+      "aliases": [
+        "salsa de tomate",
+        "pure de tomate",
+        "puree de tomate"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0044",
+          "name": "Salsa de tomate italiana Pomarola 200 g",
+          "price": 690,
+          "package_quantity": 200,
+          "package_unit": "ml",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0045",
+          "name": "Salsa de tomate Marca Líder 1 kg",
+          "price": 1790,
+          "package_quantity": 1000,
+          "package_unit": "ml",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "salsa de soya",
+      "category": "despensa",
+      "default_unit": "ml",
+      "aliases": [
+        "salsa de soya",
+        "tamari",
+        "aminos de coco"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0046",
+          "name": "Salsa de soya Kikkoman 150 ml",
+          "price": 2490,
+          "package_quantity": 150,
+          "package_unit": "ml",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0047",
+          "name": "Salsa de soya Marca Líder 500 ml",
+          "price": 1690,
+          "package_quantity": 500,
+          "package_unit": "ml",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "aceite vegetal",
+      "category": "despensa",
+      "default_unit": "ml",
+      "aliases": [
+        "aceite vegetal"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0048",
+          "name": "Aceite vegetal Belmont 1 L",
+          "price": 2690,
+          "package_quantity": 1000,
+          "package_unit": "ml",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0049",
+          "name": "Aceite vegetal Marca Líder 1 L",
+          "price": 2190,
+          "package_quantity": 1000,
+          "package_unit": "ml",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "aceite de oliva",
+      "category": "despensa",
+      "default_unit": "ml",
+      "aliases": [
+        "aceite de oliva"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0050",
+          "name": "Aceite de oliva extra virgen Chef 500 ml",
+          "price": 5990,
+          "package_quantity": 500,
+          "package_unit": "ml",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0051",
+          "name": "Aceite de oliva extra virgen Marca Líder 500 ml",
+          "price": 4790,
+          "package_quantity": 500,
+          "package_unit": "ml",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "aceite de sesamo",
+      "category": "despensa",
+      "default_unit": "ml",
+      "aliases": [
+        "aceite de sesamo"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0052",
+          "name": "Aceite de sésamo tostado Kikkoman 150 ml",
+          "price": 4490,
+          "package_quantity": 150,
+          "package_unit": "ml",
+          "sold_by_weight": false,
+          "is_default": true
+        }
+      ]
+    },
+    {
+      "name": "caldo",
+      "category": "despensa",
+      "default_unit": "unidad",
+      "aliases": [
+        "caldo"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0053",
+          "name": "Caldo en cubos Maggi 8 un",
+          "price": 1290,
+          "package_quantity": 8,
+          "package_unit": "unidad",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0054",
+          "name": "Caldo en cubos Marca Líder 12 un",
+          "price": 990,
+          "package_quantity": 12,
+          "package_unit": "unidad",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "miel",
+      "category": "despensa",
+      "default_unit": "g",
+      "aliases": [
+        "miel"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0055",
+          "name": "Miel de ulmo 500 g",
+          "price": 4990,
+          "package_quantity": 500,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0056",
+          "name": "Miel multifloral Marca Líder 500 g",
+          "price": 3490,
+          "package_quantity": 500,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "mayonesa",
+      "category": "despensa",
+      "default_unit": "g",
+      "aliases": [
+        "mayonesa"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0057",
+          "name": "Mayonesa Hellmann's 372 g",
+          "price": 2590,
+          "package_quantity": 372,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0058",
+          "name": "Mayonesa Marca Líder 400 g",
+          "price": 1690,
+          "package_quantity": 400,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "pina en conserva",
+      "category": "despensa",
+      "default_unit": "g",
+      "aliases": [
+        "pina"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0059",
+          "name": "Piña en trozos en almíbar Dos Caballos 567 g",
+          "price": 2190,
+          "package_quantity": 567,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0060",
+          "name": "Piña en trozos Marca Líder 565 g",
+          "price": 1590,
+          "package_quantity": 565,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "sal",
+      "category": "despensa",
+      "default_unit": "g",
+      "aliases": [
+        "sal"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0061",
+          "name": "Sal de mesa Lobos 1 kg",
+          "price": 790,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0062",
+          "name": "Sal de mesa Marca Líder 1 kg",
+          "price": 490,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "pimienta",
+      "category": "despensa",
+      "default_unit": "g",
+      "aliases": [
+        "pimienta"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0063",
+          "name": "Pimienta negra molida Gourmet 15 g",
+          "price": 1190,
+          "package_quantity": 15,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0064",
+          "name": "Pimienta negra molida Marca Líder 30 g",
+          "price": 1290,
+          "package_quantity": 30,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "cebolla",
+      "category": "verduras",
+      "default_unit": "g",
+      "aliases": [
+        "cebolla"
+      ],
+      "exclude": [
+        "cebollin"
+      ],
+      "products": [
+        {
+          "sku": "REF-0065",
+          "name": "Cebolla malla 1 kg",
+          "price": 1290,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0066",
+          "name": "Cebolla granel kg",
+          "price": 990,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": true,
+          "is_default": false
+        }
+      ],
+      "unit_weight_g": 150
+    },
+    {
+      "name": "ajo",
+      "category": "verduras",
+      "default_unit": "unidad",
+      "aliases": [
+        "ajo",
+        "dientes de ajo",
+        "diente de ajo"
+      ],
+      "exclude": [
+        "polvo",
+        "aceite"
+      ],
+      "products": [
+        {
+          "sku": "REF-0067",
+          "name": "Ajo malla 3 cabezas",
+          "price": 1490,
+          "package_quantity": 30,
+          "package_unit": "unidad",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0068",
+          "name": "Ajo picado en frasco Marca Líder 200 g (equivale a 40 dientes)",
+          "price": 1690,
+          "package_quantity": 40,
+          "package_unit": "unidad",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "cebollin",
+      "category": "verduras",
+      "default_unit": "unidad",
+      "aliases": [
+        "cebollin",
+        "cebollines"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0069",
+          "name": "Cebollín atado 6 tallos",
+          "price": 890,
+          "package_quantity": 6,
+          "package_unit": "unidad",
+          "sold_by_weight": false,
+          "is_default": true
+        }
+      ]
+    },
+    {
+      "name": "pimiento rojo",
+      "category": "verduras",
+      "default_unit": "unidad",
+      "aliases": [
+        "pimiento rojo",
+        "pimiento"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0070",
+          "name": "Pimiento rojo unidad",
+          "price": 990,
+          "package_quantity": 1,
+          "package_unit": "unidad",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0071",
+          "name": "Pimientos tricolor bandeja 3 un",
+          "price": 2290,
+          "package_quantity": 3,
+          "package_unit": "unidad",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "brocoli",
+      "category": "verduras",
+      "default_unit": "g",
+      "aliases": [
+        "brocoli"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0072",
+          "name": "Brócoli unidad aprox 400 g",
+          "price": 1490,
+          "package_quantity": 400,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0073",
+          "name": "Brócoli congelado Marca Líder 500 g",
+          "price": 1790,
+          "package_quantity": 500,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "champinones",
+      "category": "verduras",
+      "default_unit": "g",
+      "aliases": [
+        "champinones",
+        "champinon"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0074",
+          "name": "Champiñones laminados bandeja 200 g",
+          "price": 1690,
+          "package_quantity": 200,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        }
+      ]
+    },
+    {
+      "name": "espinaca",
+      "category": "verduras",
+      "default_unit": "g",
+      "aliases": [
+        "espinaca"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0075",
+          "name": "Espinaca baby bolsa 200 g",
+          "price": 1990,
+          "package_quantity": 200,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        }
+      ]
+    },
+    {
+      "name": "tomate cherry",
+      "category": "verduras",
+      "default_unit": "g",
+      "aliases": [
+        "tomates cherry",
+        "tomate cherry"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0076",
+          "name": "Tomate cherry bandeja 250 g",
+          "price": 1790,
+          "package_quantity": 250,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        }
+      ]
+    },
+    {
+      "name": "zanahoria",
+      "category": "verduras",
+      "default_unit": "g",
+      "aliases": [
+        "zanahoria",
+        "zanahorias"
+      ],
+      "exclude": [
+        "arvejas"
+      ],
+      "products": [
+        {
+          "sku": "REF-0077",
+          "name": "Zanahoria bolsa 1 kg",
+          "price": 990,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0078",
+          "name": "Zanahoria granel kg",
+          "price": 790,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": true,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "zapallito italiano",
+      "category": "verduras",
+      "default_unit": "g",
+      "aliases": [
+        "zapallito italiano"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0079",
+          "name": "Zapallito italiano granel kg",
+          "price": 1490,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": true,
+          "is_default": true
+        }
+      ],
+      "unit_weight_g": 250
+    },
+    {
+      "name": "repollo",
+      "category": "verduras",
+      "default_unit": "g",
+      "aliases": [
+        "repollo",
+        "coleslaw"
+      ],
+      "exclude": [
+        "bruselas"
+      ],
+      "products": [
+        {
+          "sku": "REF-0080",
+          "name": "Mix coleslaw bolsa 300 g",
+          "price": 1490,
+          "package_quantity": 300,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        }
+      ]
+    },
+    {
+      "name": "limon",
+      "category": "frutas",
+      "default_unit": "unidad",
+      "aliases": [
+        "limon",
+        "jugo de limon"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0081",
+          "name": "Limón malla 1 kg (aprox 8 un)",
+          "price": 1690,
+          "package_quantity": 8,
+          "package_unit": "unidad",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0082",
+          "name": "Limón granel unidad",
+          "price": 250,
+          "package_quantity": 1,
+          "package_unit": "unidad",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "name": "mix de verduras congeladas",
+      "category": "congelados",
+      "default_unit": "g",
+      "aliases": [
+        "arvejas",
+        "choclo",
+        "mix de arvejas"
+      ],
+      "exclude": [],
+      "products": [
+        {
+          "sku": "REF-0083",
+          "name": "Mix arvejas, zanahoria y choclo Minuto Verde 500 g",
+          "price": 1990,
+          "package_quantity": 500,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": true
+        },
+        {
+          "sku": "REF-0084",
+          "name": "Mix primavera congelado Marca Líder 1 kg",
+          "price": 2990,
+          "package_quantity": 1000,
+          "package_unit": "g",
+          "sold_by_weight": false,
+          "is_default": false
+        }
+      ]
+    }
+  ]
+}

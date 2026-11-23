@@ -92,14 +92,26 @@ def _call_groq(prompt: str, api_key: str):
                 return val
     return data if isinstance(data, list) else None
 
+def _keep_allowed(results, allowed_ids: set) -> list:
+    """Descarta recetas que el LLM haya devuelto fuera de la lista permitida (SC-1)."""
+    if not isinstance(results, list):
+        return []
+    return [r for r in results if isinstance(r, dict) and r.get("recipe_id") in allowed_ids]
+
 def recommend_and_normalize_recipes(
     intent: str,
     user_ingredients: list[str] = None,
     dietary_restrictions: list[str] = None,
     servings: int = 2,
     extra_preferences: dict = None
+    recipes: list[dict] = None
 ):
-    recipes = load_recipes()
+    # 'recipes' llega ya filtrado por el perfil alimentario; si no se entrega, se usa el repositorio completo
+    if recipes is None:
+        recipes = load_recipes()
+    if not recipes:
+        return []
+    allowed_ids = {r.get("id") for r in recipes}
     pantry = user_ingredients or []
     restrictions = dietary_restrictions or []
     extra = extra_preferences or {}

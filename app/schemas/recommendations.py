@@ -2,19 +2,20 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 
 class RecommendationRequest(BaseModel):
-    user_id: str
+    # El usuario se obtiene del token JWT; se mantiene opcional por compatibilidad con el front
+    user_id: Optional[str] = None
     intent: str = Field(..., description="ahorro, saludable, balance, vegano, vegetariano")
     servings: int = Field(default=2, ge=1, le=20, description="Cantidad de personas que comerán")
     dietary_restrictions: Optional[List[str]] = Field(
-        default=[], 
-        description="Lista de restricciones: sin gluten, intolerancia a la lactosa, keto, etc."
+        default=[],
+        description="Restricciones adicionales en texto libre (las del perfil se aplican siempre)"
     )
     extra_preferences: Optional[dict] = Field(
         default={}, 
         description="Ej: presupuesto_max, tiempo_max, nivel_cocina"
     )
     shopping_list: Optional[List[str]] = Field(
-        default=[], 
+        default=[],
         description="Ingredientes ya disponibles en despensa"
     )
 
@@ -54,3 +55,5 @@ class RecipeRecommendation(BaseModel):
 class RecommendationResponse(BaseModel):
     user_intent: str
     recommendations: List[RecipeRecommendation]
+    excluded_by_restrictions: int = 0  # Recetas descartadas por el perfil alimentario (SC-1)
+    message: Optional[str] = None
