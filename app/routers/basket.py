@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas.basket import QuoteRequest, QuoteResponse
 from app.services.catalog_service import quote_items
-from app.services.llm_service import load_recipes
+from app.services.recipe_repository import get_approved_recipes
 
 router = APIRouter(prefix="/api/basket", tags=["Cotización y Canasta"])
 
@@ -20,7 +20,7 @@ def quote_basket(data: QuoteRequest, db: Session = Depends(get_db)):
     items = [i.model_dump() for i in data.items]
 
     if data.recipe_ids:
-        recipes = {r["id"]: r for r in load_recipes()}
+        recipes = {r["id"]: r for r in get_approved_recipes(db)}
         missing = [rid for rid in data.recipe_ids if rid not in recipes]
         if missing:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Recetas no encontradas: {missing}")
