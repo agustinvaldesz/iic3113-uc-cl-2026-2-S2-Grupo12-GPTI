@@ -14,7 +14,7 @@ def _payload(**overrides):
     return body
 
 def _menu(client, headers, **overrides):
-    return client.post("/api/generar-menu", headers=headers, json=_payload(**overrides))
+    return client.post("/api/menus", headers=headers, json=_payload(**overrides))
 
 def test_menu_llena_el_calendario(client, auth_headers):
     r = _menu(client, auth_headers)
@@ -45,8 +45,8 @@ def test_excluir_ingrediente(client, auth_headers):
 def test_respeta_perfil_alimentario(client, auth_headers):
     client.put("/api/user/dietary-profile", headers=auth_headers,
                json={"diet_type": "vegana", "allergies": ["gluten"], "consent": True})
-    data = _menu(client, auth_headers).json()
-    assert data["assignments"] == {} and data["message"]
+    r = _menu(client, auth_headers)
+    assert r.status_code == 409 and "suficientes recetas" in r.json()["detail"]
 
 def test_comidas_fuera_deben_ser_menos_que_el_total(client, auth_headers):
     r = _menu(client, auth_headers, logistics={"days": 1, "meals": ["cena"], "meals_out": 1})
@@ -55,7 +55,7 @@ def test_comidas_fuera_deben_ser_menos_que_el_total(client, auth_headers):
 def test_historial_y_detalle_solo_del_dueno(client, auth_headers):
     creado = _menu(client, auth_headers).json()
     historial = client.get("/api/menus", headers=auth_headers).json()
-    assert historial[0]["id"] == creado["id"] and historial[0]["meals_out"] == 3
+    assert historial[0]["id"] == creado["id"] and historial[0]["out_meals"] == 3
     detalle = client.get(f"/api/menus/{creado['id']}", headers=auth_headers).json()
     assert detalle["assignments"] == creado["assignments"]
 
@@ -138,3 +138,46 @@ def test_eliminar_menu(client, auth_headers):
     creado = _menu(client, auth_headers).json()
     assert client.delete(f"/api/menus/{creado['id']}", headers=auth_headers).status_code == 204
     assert client.get(f"/api/menus/{creado['id']}", headers=auth_headers).status_code == 404
+
+def test_formato_del_contrato(client, auth_headers):
+    data = _menu(client, auth_headers, logistics={"days": 2, "meals": ["almuerzo", "cena"], "meals_out": 1}).json()
+    assert data["name"] == "Semana alta en proteína" and data["created_at"].endswith("Z")
+    assert "start_date" not in data["config"] and data["config"]["logistics"]["days"] == 2
+    meals = data["meals"]
+    assert [(m["date"], m["slot"]) for m in meals] == sorted((m["date"], m["slot"]) for m in meals)
+    fuera = [m for m in meals if m["source"] == "fuera"]
+    assert len(fuera) == 1 and fuera[0]["name"] == "Comida fuera de casa" and fuera[0]["recipe_id"] is None
+    assert all(isinstance(m["id"], int) for m in meals)
+    assert client.get(f"/api/menus/{data['id']}", headers=auth_headers).json()["meals"] == meals
+
+def test_mover_plato_intercambia_y_conserva_ids(client, auth_headers):
+    data = _menu(client, auth_headers, logistics={"days": 2, "meals": ["almuerzo"], "meals_out": 0}).json()
+    a, b = data["meals"]
+    body = {"from": {"date": a["date"], "slot": "almuerzo"}, "to": {"date": b["date"], "slot": "almuerzo"}}
+    r = client.post(f"/api/menus/{data['id']}/meals/move", headers=auth_headers, json=body)
+    assert r.status_code == 200
+    moved = {m["id"]: m for m in r.json()["meals"]}
+    assert moved[a["id"]]["date"] == b["date"] and moved[b["id"]]["date"] == a["date"]
+    # Mover a un espacio que no se pidió (cena) queda permitido
+    body = {"from": {"date": a["date"], "slot": "almuerzo"}, "to": {"date": a["date"], "slot": "cena"}}
+    meals = client.post(f"/api/menus/{data['id']}/meals/move", headers=auth_headers, json=body).json()["meals"]
+    assert any(m["slot"] == "cena" for m in meals)
+
+def test_mover_plato_errores(client, auth_headers):
+    data = _menu(client, auth_headers, logistics={"days": 2, "meals": ["almuerzo"], "meals_out": 0}).json()
+    url, d = f"/api/menus/{data['id']}/meals/move", data["start_date"]
+    fuera = client.post(url, headers=auth_headers, json={"from": {"date": d, "slot": "almuerzo"},
+                                                          "to": {"date": "2000-01-01", "slot": "cena"}})
+    assert fuera.status_code == 422 and "fechas del menú" in fuera.json()["detail"]
+    vacio = client.post(url, headers=auth_headers, json={"from": {"date": d, "slot": "cena"},
+                                                          "to": {"date": d, "slot": "almuerzo"}})
+    assert vacio.status_code == 409
+    assert client.post("/api/menus/99999/meals/move", headers=auth_headers,
+                       json={"from": {"date": d, "slot": "cena"}, "to": {"date": d, "slot": "almuerzo"}}).status_code == 404
+
+def test_detalle_receta_escalado(client):
+    base = client.get("/api/recipes/1").json()
+    doble = client.get(f"/api/recipes/1?servings={base['servings'] * 2}").json()
+    assert base["steps"] and base["ingredients"][0]["unit"] == "g"
+    assert doble["ingredients"][0]["quantity"] == base["ingredients"][0]["quantity"] * 2
+    assert client.get("/api/recipes/99999").status_code == 404

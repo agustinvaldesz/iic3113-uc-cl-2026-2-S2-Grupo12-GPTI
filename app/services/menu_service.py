@@ -22,10 +22,10 @@ from app.services.recipe_repository import get_approved_recipes
 
 COOK_EVERY = {"diaria": 1, "dias_por_medio": 2, "meal_prep": 4}   # Espacios que cubre una preparación
 LEFTOVER_CAP = {"nada": 1, "un_dia": 2, "sin_problema": 4}        # Máximo que tolera el usuario
-FOCUS_LABEL = {"balanceada": "balanceado", "alta_proteina": "alto en proteína",
-               "baja_carbohidratos": "bajo en carbohidratos", "baja_grasas": "bajo en grasas"}
+MENU_TITLES = {"balanceada": "Menú balanceado", "alta_proteina": "Semana alta en proteína",
+               "baja_carbohidratos": "Menú bajo en carbohidratos", "baja_grasas": "Menú bajo en grasas"}
+OUT_NAME = "Comida fuera de casa"
 MAX_COST_CANDIDATES = 25  # Límite de recetas a cotizar una por una (para cumplir los 8 s)
-
 
 # Armar calendario
 def build_slots(start: date, days: int, meals: list[str], meals_out: int) -> list[dict]:
@@ -141,11 +141,21 @@ def _assignments(plan_id, slots: list[dict]) -> dict:
         key = f"{s['date']}|{s['meal']}"
         if s["origin"] == "fuera":
             n_out += 1
-            out[key] = {"id": f"{plan_id or 'nuevo'}-fuera-{n_out}", "name": "Comida fuera", "origin": "fuera"}
+            out[key] = {"id": f"{plan_id or 'nuevo'}-fuera-{n_out}", "name": OUT_NAME, "origin": "fuera"}
         else:
             out[key] = {"id": f"{plan_id or 'nuevo'}-{i + 1}", "name": s["recipe_title"], "origin": "casera",
                         "recipe_id": s["recipe_id"], "is_leftover": s.get("is_leftover", False)}
     return out
+
+def _meals(plan: MealPlanDB) -> list[dict]:
+    """Calendario en el formato del contrato: por fecha y almuerzo antes que cena."""
+    slots = sorted(plan.slots, key=lambda s: (s.date, s.meal != "almuerzo"))
+    return [{"id": s.id, "date": s.date, "slot": s.meal, "source": s.origin, "recipe_id": s.recipe_id,
+             "name": OUT_NAME if s.origin == "fuera" else (s.recipe_title or "Receta no disponible")}
+            for s in slots]
+
+def _config(plan: MealPlanDB) -> dict:
+    return {k: v for k, v in (plan.request or {}).items() if k != "start_date"}
 
 def _budget_warning(user: UserDB, basket: Optional[dict], days: int) -> list[str]:
     if not basket or not user.budget_limit:
@@ -156,11 +166,14 @@ def _budget_warning(user: UserDB, basket: Optional[dict], days: int) -> list[str
     return []
 
 # Flujo del menú
+class NotEnoughRecipesError(ValueError):
+    pass
+
 def generate_menu(db: Session, user: UserDB, req) -> dict:
     lg, nu, ck = req.logistics, req.nutrition, req.cooking
     start = req.start_date or (date.today() + timedelta(days=1))
     slots = build_slots(start, lg.days, lg.meals, lg.meals_out)
-    name = f"Menú {FOCUS_LABEL[nu.diet_focus]}" + (" y económico" if req.budget.prioritize_savings else "")
+    name = MENU_TITLES[nu.diet_focus]
     base = {"name": name, "start_date": slots[0]["date"], "end_date": slots[-1]["date"],
             "diners": lg.diners, "budget_limit": user.budget_limit}
 
@@ -170,8 +183,8 @@ def generate_menu(db: Session, user: UserDB, req) -> dict:
                if not _uses_excluded(r, nu.excluded_ingredients)]
     excluded = len(approved) - len(allowed)
     if not allowed:
-        return {**base, "assignments": {}, "recipes": [], "basket": None, "excluded_by_restrictions": excluded,
-                "message": "No encontramos recetas compatibles con tus restricciones e ingredientes excluidos."}
+        raise NotEnoughRecipesError("No encontramos suficientes recetas compatibles con tus restricciones. "
+                                    "Prueba con menos días o revisa tus ingredientes excluidos.")
 
     warnings = []
     batch = min(COOK_EVERY[ck.cooking_frequency], LEFTOVER_CAP[ck.leftovers_tolerance])
@@ -206,7 +219,8 @@ def generate_menu(db: Session, user: UserDB, req) -> dict:
     db.commit()
     db.refresh(plan)
 
-    return {**base, "id": plan.id, "created_at": plan.created_at, "assignments": _assignments(plan.id, slots),
+    return {**base, "id": plan.id, "created_at": plan.created_at, "config": _config(plan), "meals": _meals(plan),
+            "assignments": _assignments(plan.id, slots),
             "recipes": info, "basket": basket, "excluded_by_restrictions": excluded,
             "message": None, "warnings": warnings}
 
@@ -228,12 +242,15 @@ def menu_detail(db: Session, plan: MealPlanDB, user: UserDB) -> dict:
                         + ", ".join(sorted(no_longer_ok)) + ". Te recomendamos generar un menú nuevo.")
     return {"id": plan.id, "name": plan.name, "created_at": plan.created_at, "start_date": plan.start_date,
             "end_date": plan.end_date, "diners": plan.diners, "budget_limit": user.budget_limit,
-            "assignments": _assignments(plan.id, slots), "recipes": info, "basket": basket,
+            "config": _config(plan), "meals": _meals(plan), "assignments": _assignments(plan.id, slots), "recipes": info, "basket": basket,
             "message": None, "warnings": warnings + _budget_warning(user, basket, plan.request["logistics"]["days"])}
 
 # Edición del calendario
 
 class MenuEditError(ValueError):
+    pass
+
+class MealMovedError(ValueError):
     pass
 
 def mark_leftovers(slots: list[dict]) -> None:
@@ -281,3 +298,68 @@ def update_assignments(db: Session, plan: MealPlanDB, user: UserDB, assignments:
     db.commit()
     db.refresh(plan)
     return menu_detail(db, plan, user)
+
+def move_meal(db: Session, plan: MealPlanDB, src, dst) -> list[dict]:
+    """Mueve un plato a otro espacio; si el destino está ocupado, los intercambia (cada plato conserva su id)."""
+    def in_range(ref):
+        return plan.start_date <= ref.date.isoformat() <= plan.end_date
+    if not in_range(src) or not in_range(dst) or (src.date, src.slot) == (dst.date, dst.slot):
+        raise MenuEditError("Solo puedes mover platos dentro de las fechas del menú.")
+    by_key = {(s.date, s.meal): s for s in plan.slots}
+    moving = by_key.get((src.date.isoformat(), src.slot))
+    if moving is None:
+        raise MealMovedError("Ese plato ya no está en ese lugar. Actualizamos tu calendario.")
+    target = by_key.get((dst.date.isoformat(), dst.slot))
+    if target is not None:
+        target.date, target.meal = moving.date, moving.meal
+    moving.date, moving.meal = dst.date.isoformat(), dst.slot
+
+    slots = [{"date": s.date, "meal": s.meal, "origin": s.origin, "recipe_id": s.recipe_id, "ref": s}
+             for s in plan.slots]
+    mark_leftovers(slots)
+    for s in slots:
+        s["ref"].is_leftover = s["is_leftover"]
+    db.commit()
+    db.refresh(plan)
+    return _meals(plan)
+
+# Detalle de receta para el modal
+
+UNITS = {"g": "g", "gr": "g", "kg": "kg", "ml": "ml", "l": "l", "taza": "taza", "tazas": "taza",
+         "cucharada": "cucharada", "cucharadas": "cucharada", "cucharadita": "cucharadita",
+         "cucharaditas": "cucharadita", "diente": "diente", "dientes": "diente", "lata": "lata",
+         "latas": "lata", "unidad": "unidad", "unidades": "unidad", "pizca": "pizca"}
+
+def parse_ingredient(line: str, factor: float) -> dict:
+    """"450 g de carne molida" x 0.5 -> {name: "carne molida", quantity: 225, unit: "g"}."""
+    optional = "opcional" in line.lower()
+    match = _AMOUNT.match(line)
+    if not match:
+        return {"name": line.strip(), "quantity": None, "unit": "al gusto", "is_optional": optional}
+    quantity = _to_float(match.group(1)) * factor
+    words = line[match.end():].split()
+    unit = UNITS.get(words[0].lower()) if words else None
+    if unit:
+        words = words[1:]
+    if words and words[0].lower() == "de":
+        words = words[1:]
+    unit = unit or "unidad"
+    if unit in ("g", "ml"):
+        quantity = round(quantity)
+    elif unit == "unidad":
+        quantity = max(0.5, round(quantity * 2) / 2)  # Huevos, cebollas: de a media unidad
+    else:
+        quantity = round(quantity, 2)
+    return {"name": " ".join(words) or line.strip(), "quantity": quantity, "unit": unit, "is_optional": optional}
+
+def split_steps(instructions: str) -> list[str]:
+    parts = re.split(r"\n+|(?<=\.)\s+(?=[A-ZÁÉÍÓÚÑ])", instructions or "")
+    return [re.sub(r"^\d+[.)]\s*", "", p).strip() for p in parts if p.strip()]
+
+def recipe_detail(recipe: dict, servings: Optional[int]) -> dict:
+    base = recipe.get("servings") or 1
+    final = servings or base
+    return {"id": recipe["id"], "title": recipe["title"], "servings": final, "prep_time": recipe.get("prep_time"),
+            "diet_type": recipe.get("diet_type") or "con_carne", "allergens": recipe.get("allergens", []),
+            "ingredients": [parse_ingredient(line, final / base) for line in recipe.get("ingredients", [])],
+            "steps": split_steps(recipe.get("instructions", ""))}

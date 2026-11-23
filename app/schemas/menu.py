@@ -1,8 +1,8 @@
 """Contrato de POST /api/generar-menu (definido por el front en ConfigMenuPage.tsx, más budget y pantry)."""
 import re
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from typing import Dict, List, Literal, Optional
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, field_serializer, field_validator, model_validator
 from app.schemas.basket import QuoteResponse
 
 Meal = Literal["almuerzo", "cena"]
@@ -65,6 +65,20 @@ class MenuRecipeOut(BaseModel):
     base_servings: int
     scale_factor: float
 
+def _iso_z(value: Optional[datetime]) -> Optional[str]:
+    """Fechas en UTC con Z al final, como pide el contrato (2026-11-23T14:30:00Z)."""
+    if value is None:
+        return None
+    return value.replace(tzinfo=timezone.utc, microsecond=0).isoformat().replace("+00:00", "Z")
+
+class MealOut(BaseModel):
+    id: int
+    date: str
+    slot: Meal
+    name: str
+    source: Literal["casera", "fuera"]
+    recipe_id: Optional[int] = None
+
 class MenuOut(BaseModel):
     id: Optional[int] = None
     name: str
@@ -72,6 +86,8 @@ class MenuOut(BaseModel):
     start_date: str
     end_date: str
     diners: int
+    config: dict = Field(default_factory=dict)        # Lo que se pidió en el formulario (sin start_date)
+    meals: List[MealOut] = Field(default_factory=list)  # Calendario según el contrato del front
     assignments: Dict[str, SlotOut]  # Clave "YYYY-MM-DD|almuerzo"
     recipes: List[MenuRecipeOut]
     basket: Optional[QuoteResponse] = None
@@ -79,6 +95,10 @@ class MenuOut(BaseModel):
     excluded_by_restrictions: int = 0
     message: Optional[str] = None
     warnings: List[str] = Field(default_factory=list)
+
+    @field_serializer("created_at")
+    def _created_at(self, value):
+        return _iso_z(value)
 
 class MenuSummary(BaseModel):
     id: int
@@ -88,8 +108,41 @@ class MenuSummary(BaseModel):
     end_date: str
     diners: int
     home_meals: int
-    meals_out: int
+    out_meals: int
     total_cost: Optional[int] = None
+
+    @field_serializer("created_at")
+    def _created_at(self, value):
+        return _iso_z(value)
+
+# Mover un plato (POST /api/menus/{id}/meals/move)
+class SlotRef(BaseModel):
+    date: date
+    slot: Meal
+
+class MealMoveRequest(BaseModel):
+    from_: SlotRef = Field(..., alias="from")
+    to: SlotRef
+
+class MealMoveResponse(BaseModel):
+    meals: List[MealOut]
+
+# Detalle de receta para el modal (GET /api/recipes/{id}?servings=N)
+class RecipeIngredientOut(BaseModel):
+    name: str
+    quantity: Optional[float] = None  # None cuando la receta dice "al gusto"
+    unit: str
+    is_optional: bool = False
+
+class RecipeDetailOut(BaseModel):
+    id: int
+    title: str
+    servings: int
+    prep_time: Optional[str] = None
+    diet_type: str
+    allergens: List[str] = Field(default_factory=list)
+    ingredients: List[RecipeIngredientOut]
+    steps: List[str]
 
 # Edición del calendario (PUT /api/menus/{id}/assignments)
 SLOT_KEY = r"^\d{4}-\d{2}-\d{2}\|(almuerzo|cena)$"
