@@ -3,6 +3,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, SessionLocal
 from app.models_db import Base
+from app.routers import preferences, auth, recommendations, dietary_profile
+from app.routers import menus
 from app.routers import preferences, auth, recommendations, basket
 from app.services.catalog_service import seed_catalog_if_empty
 
@@ -37,6 +39,8 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(preferences.router)
 app.include_router(recommendations.router)
+app.include_router(dietary_profile.router)
+app.include_router(menus.router)
 app.include_router(basket.router)
 
 @app.get("/")
