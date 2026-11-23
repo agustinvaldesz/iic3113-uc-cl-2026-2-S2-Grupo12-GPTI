@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine
 from app.models_db import Base
 from app.routers import preferences, auth, recommendations, dietary_profile
+from app.routers import menus
 
 # Crea las tablas en la base de datos si no existen
 Base.metadata.create_all(bind=engine)
@@ -33,6 +34,7 @@ app.include_router(auth.router)
 app.include_router(preferences.router)
 app.include_router(recommendations.router)
 app.include_router(dietary_profile.router)
+app.include_router(menus.router)
 
 @app.get("/")
 def read_root():
