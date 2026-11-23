@@ -91,3 +91,50 @@ def test_detalle_avisa_si_cambio_el_perfil(client, auth_headers):
                json={"diet_type": "vegana", "allergies": ["gluten"], "consent": True})
     detalle = client.get(f"/api/menus/{creado['id']}", headers=auth_headers).json()
     assert any("ya no son compatibles" in w for w in detalle["warnings"])
+
+def _slots_editables(data):
+    return {k: {"origin": v["origin"], "recipe_id": v.get("recipe_id")} for k, v in data["assignments"].items()}
+
+def test_editar_calendario_intercambia_y_recalcula(client, auth_headers):
+    creado = _menu(client, auth_headers, logistics={"days": 3, "meals": ["almuerzo"], "meals_out": 0},
+                   cooking={"cooking_frequency": "diaria", "leftovers_tolerance": "nada"}).json()
+    slots = _slots_editables(creado)
+    a, b = "2026-11-16|almuerzo", "2026-11-17|almuerzo"
+    slots[a], slots[b] = slots[b], slots[a]
+    r = client.put(f"/api/menus/{creado['id']}/assignments", headers=auth_headers, json={"assignments": slots})
+    assert r.status_code == 200
+    nuevo = r.json()["assignments"]
+    assert nuevo[a]["recipe_id"] == creado["assignments"][b]["recipe_id"]
+    assert nuevo[b]["recipe_id"] == creado["assignments"][a]["recipe_id"]
+    # Se guardó: al reabrir el menú se ve igual
+    assert client.get(f"/api/menus/{creado['id']}", headers=auth_headers).json()["assignments"] == nuevo
+
+def test_editar_marca_sobras_y_comidas_fuera(client, auth_headers):
+    creado = _menu(client, auth_headers, logistics={"days": 3, "meals": ["almuerzo"], "meals_out": 0}).json()
+    receta = creado["assignments"]["2026-11-16|almuerzo"]["recipe_id"]
+    slots = {
+        "2026-11-16|almuerzo": {"origin": "casera", "recipe_id": receta},
+        "2026-11-17|almuerzo": {"origin": "casera", "recipe_id": receta},
+        "2026-11-18|almuerzo": {"origin": "fuera"},
+    }
+    nuevo = client.put(f"/api/menus/{creado['id']}/assignments", headers=auth_headers, json={"assignments": slots}).json()
+    assert nuevo["assignments"]["2026-11-17|almuerzo"]["is_leftover"] is True
+    assert nuevo["assignments"]["2026-11-18|almuerzo"]["origin"] == "fuera"
+    assert nuevo["recipes"][0]["times_in_menu"] == 2
+
+def test_editar_rechaza_espacios_y_recetas_invalidas(client, auth_headers):
+    creado = _menu(client, auth_headers, logistics={"days": 2, "meals": ["almuerzo"], "meals_out": 0}).json()
+    fuera_de_rango = {"2026-12-01|almuerzo": {"origin": "fuera"}}
+    assert client.put(f"/api/menus/{creado['id']}/assignments", headers=auth_headers,
+                      json={"assignments": fuera_de_rango}).status_code == 422
+    receta_inexistente = {"2026-11-16|almuerzo": {"origin": "casera", "recipe_id": 9999}}
+    assert client.put(f"/api/menus/{creado['id']}/assignments", headers=auth_headers,
+                      json={"assignments": receta_inexistente}).status_code == 422
+    casera_sin_receta = {"2026-11-16|almuerzo": {"origin": "casera"}}
+    assert client.put(f"/api/menus/{creado['id']}/assignments", headers=auth_headers,
+                      json={"assignments": casera_sin_receta}).status_code == 422
+
+def test_eliminar_menu(client, auth_headers):
+    creado = _menu(client, auth_headers).json()
+    assert client.delete(f"/api/menus/{creado['id']}", headers=auth_headers).status_code == 204
+    assert client.get(f"/api/menus/{creado['id']}", headers=auth_headers).status_code == 404

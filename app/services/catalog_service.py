@@ -14,8 +14,9 @@ import unicodedata
 from datetime import datetime, timedelta
 from functools import lru_cache
 from typing import Optional
+from collections import defaultdict
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.models_db import IngredientDB, IngredientProductDB, ProductCacheDB
 from app.services import lider_client
@@ -209,7 +210,18 @@ def _product_option(db: Session, link: IngredientProductDB, needed: Optional[flo
 # Cotización
 # ---------------------------------------------------------------------------
 
-def quote_items(db: Session, items: list[dict], pantry: Optional[list[str]] = None, selections: Optional[dict] = None) -> dict:
+def load_catalog_index(db: Session) -> dict:
+    """Carga ingredientes y productos en 2 consultas, para no consultar la BD por cada ingrediente."""
+    links_by_ingredient = defaultdict(list)
+    for link in db.query(IngredientProductDB).options(joinedload(IngredientProductDB.product)).all():
+        links_by_ingredient[link.ingredient_id].append(link)
+    return {
+        "ingredients": {i.name: i for i in db.query(IngredientDB).all()},
+        "links": links_by_ingredient,
+    }
+
+def quote_items(db: Session, items: list[dict], pantry: Optional[list[str]] = None, selections: Optional[dict] = None,
+                catalog: Optional[dict] = None) -> dict:
     """
     Cotiza una lista de ingredientes (de una receta o de una canasta).
     items: [{"original_name", "catalog_query"?, "quantity_needed"?}]
@@ -217,6 +229,7 @@ def quote_items(db: Session, items: list[dict], pantry: Optional[list[str]] = No
     selections: {nombre_ingrediente: sku} para reemplazar el producto por defecto (SC-2, "reemplazar con un clic").
     """
     selections = selections or {}
+    catalog = catalog or load_catalog_index(db)  # Se puede reutilizar entre varias cotizaciones
     pantry_ingredients = {match_ingredient(p) for p in (pantry or [])} - {None}
     meta = _meta()[0]
 
@@ -233,7 +246,7 @@ def quote_items(db: Session, items: list[dict], pantry: Optional[list[str]] = No
         if name in pantry_ingredients or normalize(item.get("quantity_needed", "")) == "ya en despensa":
             in_pantry.append(original)
             continue
-        ingredient = db.query(IngredientDB).filter(IngredientDB.name == name).first()
+        ingredient = catalog["ingredients"].get(name)
         if ingredient is None:  # catálogo sin cargar para este ingrediente
             not_quoted.append(original)
             continue
@@ -254,8 +267,8 @@ def quote_items(db: Session, items: list[dict], pantry: Optional[list[str]] = No
     lines, warnings = [], []
     total = total_default = potential_savings = 0
     for name, g in groups.items():
-        ingredient = db.query(IngredientDB).filter(IngredientDB.name == name).first()
-        links = db.query(IngredientProductDB).filter(IngredientProductDB.ingredient_id == ingredient.id).all()
+        ingredient = catalog["ingredients"][name]
+        links = catalog["links"].get(ingredient.id, [])
         if not links:
             not_quoted.extend(g["sources"])
             continue

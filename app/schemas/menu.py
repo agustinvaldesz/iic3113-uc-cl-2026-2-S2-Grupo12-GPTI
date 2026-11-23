@@ -1,4 +1,5 @@
 """Contrato de POST /api/generar-menu (definido por el front en ConfigMenuPage.tsx, más budget y pantry)."""
+import re
 from datetime import date, datetime
 from typing import Dict, List, Literal, Optional
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -89,3 +90,30 @@ class MenuSummary(BaseModel):
     home_meals: int
     meals_out: int
     total_cost: Optional[int] = None
+
+# Edición del calendario (PUT /api/menus/{id}/assignments)
+SLOT_KEY = r"^\d{4}-\d{2}-\d{2}\|(almuerzo|cena)$"
+
+class AssignmentIn(BaseModel):
+    origin: Literal["casera", "fuera"]
+    recipe_id: Optional[int] = None
+
+    @model_validator(mode="after")
+    def recipe_matches_origin(self):
+        if self.origin == "casera" and self.recipe_id is None:
+            raise ValueError("Una comida casera necesita recipe_id.")
+        if self.origin == "fuera":
+            self.recipe_id = None
+        return self
+
+class UpdateAssignmentsRequest(BaseModel):
+    """Calendario completo después de editarlo. Un espacio que no viene, queda vacío."""
+    assignments: Dict[str, AssignmentIn] = Field(..., min_length=1)
+
+    @field_validator("assignments")
+    @classmethod
+    def valid_keys(cls, assignments: Dict[str, AssignmentIn]) -> Dict[str, AssignmentIn]:
+        bad = [k for k in assignments if not re.match(SLOT_KEY, k)]
+        if bad:
+            raise ValueError(f"Claves inválidas (formato YYYY-MM-DD|almuerzo): {', '.join(bad)}")
+        return assignments

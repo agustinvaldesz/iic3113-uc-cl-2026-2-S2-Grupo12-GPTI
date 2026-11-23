@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.dependencies import get_current_user
 from app.models_db import MealPlanDB, UserDB
-from app.schemas.menu import GenerarMenuRequest, MenuOut, MenuSummary
-from app.services.menu_service import generate_menu, menu_detail
+from app.schemas.menu import GenerarMenuRequest, MenuOut, MenuSummary, UpdateAssignmentsRequest
+from app.services.menu_service import MenuEditError, generate_menu, menu_detail, update_assignments
 
 router = APIRouter(prefix="/api", tags=["Armado del menú"])
 
@@ -30,3 +30,25 @@ def read_menu(menu_id: int, user: UserDB = Depends(get_current_user), db: Sessio
     if plan is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Menú no encontrado.")
     return menu_detail(db, plan, user)
+
+def _get_own_plan(db: Session, menu_id: int, user: UserDB) -> MealPlanDB:
+    plan = db.query(MealPlanDB).filter(MealPlanDB.id == menu_id, MealPlanDB.user_id == user.id).first()
+    if plan is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Menú no encontrado.")
+    return plan
+
+@router.put("/menus/{menu_id}/assignments", response_model=MenuOut)
+def edit_menu(menu_id: int, data: UpdateAssignmentsRequest,
+              user: UserDB = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Guarda el calendario editado (platos movidos, quitados o cambiados) y recotiza la canasta."""
+    plan = _get_own_plan(db, menu_id, user)
+    try:
+        return update_assignments(db, plan, user, data.assignments)
+    except MenuEditError as e:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
+
+@router.delete("/menus/{menu_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_menu(menu_id: int, user: UserDB = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Elimina un menú del historial."""
+    db.delete(_get_own_plan(db, menu_id, user))
+    db.commit()

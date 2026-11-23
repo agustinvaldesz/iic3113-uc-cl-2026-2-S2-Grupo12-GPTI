@@ -16,7 +16,7 @@ from datetime import date, timedelta
 from typing import Optional
 from sqlalchemy.orm import Session
 from app.models_db import MealPlanDB, MealPlanSlotDB, UserDB
-from app.services.catalog_service import normalize, quote_items
+from app.services.catalog_service import normalize, quote_items, load_catalog_index
 from app.services.recipe_filter import filter_recipes, get_user_restrictions
 from app.services.recipe_repository import get_approved_recipes
 
@@ -54,8 +54,8 @@ def _pantry_matches(recipe: dict, pantry: list[str]) -> int:
     text = normalize(" ".join(recipe["ingredients"]))
     return sum(1 for p in pantry if p.strip() and normalize(p) in text)
 
-def cost_per_serving(db: Session, recipe: dict, pantry: list[str]) -> float:
-    quote = quote_items(db, [{"original_name": i} for i in recipe["ingredients"]], pantry=pantry)
+def cost_per_serving(db: Session, recipe: dict, pantry: list[str], catalog: Optional[dict] = None) -> float:
+    quote = quote_items(db, [{"original_name": i} for i in recipe["ingredients"]], pantry=pantry, catalog=catalog)
     return quote["total"] / (recipe.get("servings") or 4)
 
 def rank_recipes(db: Session, recipes: list[dict], focus: str, pantry: list[str], savings: bool) -> list[dict]:
@@ -65,7 +65,8 @@ def rank_recipes(db: Session, recipes: list[dict], focus: str, pantry: list[str]
     if not savings:
         return pool
     head = pool[:MAX_COST_CANDIDATES]
-    costs = {r["id"]: cost_per_serving(db, r, pantry) for r in head}
+    catalog = load_catalog_index(db)  # Una sola carga del catálogo para cotizar todas las recetas
+    costs = {r["id"]: cost_per_serving(db, r, pantry, catalog) for r in head}
     head.sort(key=lambda r: (focus not in r.get("diet_focus", []), costs[r["id"]]))
     return head + pool[MAX_COST_CANDIDATES:]
 
@@ -229,3 +230,54 @@ def menu_detail(db: Session, plan: MealPlanDB, user: UserDB) -> dict:
             "end_date": plan.end_date, "diners": plan.diners, "budget_limit": user.budget_limit,
             "assignments": _assignments(plan.id, slots), "recipes": info, "basket": basket,
             "message": None, "warnings": warnings + _budget_warning(user, basket, plan.request["logistics"]["days"])}
+
+# Edición del calendario
+
+class MenuEditError(ValueError):
+    pass
+
+def mark_leftovers(slots: list[dict]) -> None:
+    """Una comida es sobra si el día anterior, en la misma comida, se cocinó la misma receta."""
+    by_key = {(s["date"], s["meal"]): s for s in slots}
+    for s in sorted(slots, key=lambda x: x["date"]):
+        prev_day = (date.fromisoformat(s["date"]) - timedelta(days=1)).isoformat()
+        prev = by_key.get((prev_day, s["meal"]))
+        s["is_leftover"] = bool(s["origin"] == "casera" and prev and prev["origin"] == "casera"
+                                and prev["recipe_id"] == s["recipe_id"])
+
+def update_assignments(db: Session, plan: MealPlanDB, user: UserDB, assignments: dict) -> dict:
+    """Reemplaza el calendario de un menú guardado (por ejemplo, tras arrastrar platos)."""
+    meals = set(plan.request["logistics"]["meals"])
+    approved = {r["id"]: r for r in get_approved_recipes(db)}
+    titles_in_plan = {s.recipe_id: s.recipe_title for s in plan.slots if s.recipe_id}
+
+    slots = []
+    for key, a in assignments.items():
+        day, meal = key.split("|")
+        if not (plan.start_date <= day <= plan.end_date) or meal not in meals:
+            raise MenuEditError(f"El espacio {key} está fuera del menú ({plan.start_date} a {plan.end_date}).")
+        title = None
+        if a.origin == "casera":
+            if a.recipe_id in approved:
+                title = approved[a.recipe_id]["title"]
+            elif a.recipe_id in titles_in_plan:
+                title = titles_in_plan[a.recipe_id]  # Ya estaba en el menú, aunque hoy no esté aprobada
+            else:
+                raise MenuEditError(f"La receta {a.recipe_id} no existe o no está aprobada.")
+        slots.append({"date": day, "meal": meal, "origin": a.origin,
+                      "recipe_id": a.recipe_id, "recipe_title": title})
+    mark_leftovers(slots)
+    slots.sort(key=lambda s: (s["date"], s["meal"] != "almuerzo"))
+
+    plan.slots.clear()
+    for s in slots:
+        plan.slots.append(MealPlanSlotDB(date=s["date"], meal=s["meal"], origin=s["origin"],
+                                         recipe_id=s["recipe_id"], recipe_title=s["recipe_title"],
+                                         portions=plan.diners if s["origin"] == "casera" else 0,
+                                         is_leftover=s["is_leftover"]))
+    db.flush()
+    _, basket = build_recipes_and_basket(db, slots, plan.diners, plan.request.get("pantry", []), approved)
+    plan.total_cost = basket["total"] if basket else None
+    db.commit()
+    db.refresh(plan)
+    return menu_detail(db, plan, user)
